@@ -1,6 +1,7 @@
 package main
 
 import (
+	_ "gin-init/mq/rabbitMQ"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
