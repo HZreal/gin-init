@@ -1,6 +1,8 @@
 package controller
 
 import (
+	"gin-init/common"
+	"gin-init/model/dto"
 	"gin-init/service"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -11,19 +13,46 @@ type UserController struct {
 	userService *service.UserService
 }
 
-func (uC *UserController) getUserList(c *gin.Context) {
-	//
-	body := make(map[string]interface{})
-	result := uC.userService.GetUserList(body)
+func (uC *UserController) GetUserList(c *gin.Context) {
 
-	c.JSON(http.StatusOK, result)
+	var query dto.QueryPagination
+	if err := c.ShouldBindQuery(&query); err != nil {
+		c.JSON(http.StatusBadRequest, common.Failed(common.ParamsError))
+		return
+	}
+
+	// var body dto.UserListFilterDTO
+	var body map[string]interface{}
+	if err := c.ShouldBindJSON(&body); err != nil {
+		c.JSON(http.StatusBadRequest, common.Failed(common.ParamsError))
+		return
+	}
+
+	//
+	data, err := uC.userService.GetUserList(c, query, body)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, common.Failed(common.UKnownError))
+	}
+
+	c.JSON(http.StatusOK, common.SuccessWithData(data))
 
 }
 
-func (uC *UserController) getUserDetail(c *gin.Context) {
+func (uC *UserController) GetUserDetail(c *gin.Context) {
 	//
-	id := 1
-	result := uC.userService.GetUserDetail(id)
+	id := c.Query("id")
 
-	c.JSON(http.StatusOK, result)
+	// 校验
+
+	// 调用服务层
+	data, err := uC.userService.GetUserDetail(c, id)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, common.Failed(common.UKnownError))
+	}
+
+	c.JSON(http.StatusOK, common.SuccessWithData(data))
+}
+
+func (uC *UserController) CreateUser(context *gin.Context) {
+
 }

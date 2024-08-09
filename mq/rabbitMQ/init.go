@@ -45,7 +45,7 @@ func startConsumers() {
 	}
 }
 
-func init() {
+func Start() {
 	var err error
 	Conn, err = amqp.Dial("amqp://admin:root123456@localhost:5672/%2Flocal")
 	if err != nil {

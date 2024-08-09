@@ -1,0 +1,36 @@
+gin:
+  host: 127.0.0.1
+  port: 40020
+  mode: debug
+
+mysql:
+  host: 127.0.0.1
+  port: 53306
+  dbname: demo
+  # 数据库登录用户
+  username: root
+  # 数据库密码
+  password: root123456
+  # 数据库名字
+  timeout: 10s
+  maxConn: 200
+  maxOpen: 200
+
+postgresql:
+  host: 127.0.0.1
+  port: 55433
+  dbname: demo
+  # 数据库登录用户
+  username: huang
+  # 数据库密码
+  password: root123456
+
+redis:
+  host: 127.0.0.1
+  port: 56378
+  password:
+  DB: 15
+
+grpc:
+  host: 127.0.0.1
+  port: 50051
