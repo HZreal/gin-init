@@ -3,6 +3,7 @@ package server
 import (
 	"fmt"
 	"gin-init/config"
+	"gin-init/core/socketio"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"time"
@@ -36,9 +37,18 @@ func init() {
 		MaxAge:           12 * time.Hour, // 预检请求的缓存时间
 	}))
 
+	// 创建并配置 Socket.IO 服务器
+	socketIOServer := socketio.CreateSocketIOServer()
+
+	// 将 Socket.IO 服务器集成到 Gin 路由中
+	r.GET("/socket.io/*any", gin.WrapH(socketIOServer))
+	r.POST("/socket.io/*any", gin.WrapH(socketIOServer))
+
+	// 静态文件（页面等）
+	r.Static("/public", "./public")
+
 	// routers definition
 	apiGroup = r.Group("api")
-
 	//
 	registerRoutes()
 }
