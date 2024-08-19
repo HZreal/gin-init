@@ -13,6 +13,10 @@ type SysController struct {
 	sysService *service.SysService
 }
 
+func NewSysController(sysService *service.SysService) *SysController {
+	return &SysController{sysService: sysService}
+}
+
 func (uC *SysController) Login(c *gin.Context) {
 	//
 	var loginData dto.LoginData

@@ -8,6 +8,10 @@ type UserModel struct {
 	Extra map[string]interface{} `gorm:"column:extra;serializer:json"`
 }
 
+func NewUserModel() *UserModel {
+	return &UserModel{}
+}
+
 func (t *UserModel) TableName() string {
 	return "tb_user"
 }

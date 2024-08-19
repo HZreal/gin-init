@@ -10,7 +10,11 @@ import (
 
 type UserController struct {
 	//
-	userService *service.UserService
+	UserService *service.UserService
+}
+
+func NewUserController(userService *service.UserService) *UserController {
+	return &UserController{UserService: userService}
 }
 
 func (uC *UserController) GetUserList(c *gin.Context) {
@@ -29,7 +33,7 @@ func (uC *UserController) GetUserList(c *gin.Context) {
 	}
 
 	//
-	data, err := uC.userService.GetUserList(c, query, body)
+	data, err := uC.UserService.GetUserList(c, query, body)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, common.Failed(common.UKnownError))
 	}
@@ -45,7 +49,7 @@ func (uC *UserController) GetUserDetail(c *gin.Context) {
 	// 校验
 
 	// 调用服务层
-	data, err := uC.userService.GetUserDetail(c, id)
+	data, err := uC.UserService.GetUserDetail(c, id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, common.Failed(common.UKnownError))
 	}

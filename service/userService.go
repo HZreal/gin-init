@@ -16,6 +16,10 @@ type UserService struct {
 	UserModel *entity.UserModel
 }
 
+func NewUserService(userModel *entity.UserModel) *UserService {
+	return &UserService{UserModel: userModel}
+}
+
 func (uS *UserService) GetUserList(c *gin.Context, query dto.QueryPagination, body map[string]interface{}) (result vo.PaginationResult, err error) {
 	//
 
@@ -27,9 +31,9 @@ func (uS *UserService) GetUserList(c *gin.Context, query dto.QueryPagination, bo
 	offset := (page - 1) * pageSize
 
 	// 获取数据总数和分页数据
-	db.Model(&entity.UserModel{}).Where(body).Count(&total).Offset(offset).Limit(pageSize).Find(&userInfos)
-	// TODO error
-	// db.Model(uS.UserModel).Where(body).Count(&total).Offset(offset).Limit(pageSize).Find(&userInfos)
+	// db.Model(&entity.UserModel{}).Where(body).Count(&total).Offset(offset).Limit(pageSize).Find(&userInfos)
+	// TODO 通过依赖注入
+	db.Model(uS.UserModel).Where(body).Count(&total).Offset(offset).Limit(pageSize).Find(&userInfos)
 
 	// 计算总页数
 	pages := int(total) / pageSize
