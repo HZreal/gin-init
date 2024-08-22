@@ -37,3 +37,55 @@ func Test_invoke(t *testing.T) {
 		})
 	}
 }
+
+func Test_invoke2(t *testing.T) {
+	type args struct {
+		num int32
+	}
+	tests := []struct {
+		name string
+		args args
+	}{
+		// TODO: Add test cases.
+		{name: "case1", args: args{num: 120}},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			invoke2(tt.args.num)
+		})
+	}
+}
+
+func Test_invoke3(t *testing.T) {
+	type args struct {
+		arr []int32
+	}
+	tests := []struct {
+		name string
+		args args
+		want float32
+	}{
+		// TODO: Add test cases.
+		{name: "case1", args: args{arr: []int32{1, 2, 3, 4, 5}}, want: 3.00},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := invoke3(tt.args.arr); got != tt.want {
+				t.Errorf("invoke3() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func Test_invoke4(t *testing.T) {
+	tests := []struct {
+		name string
+	}{
+		// TODO: Add test cases.
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			invoke4()
+		})
+	}
+}
