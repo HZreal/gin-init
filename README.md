@@ -17,11 +17,12 @@
 - 基础路由、基础查询
 - 跨域 cros
 - 参数验证
+- 异常拦截器
+- JWT 认证
 - Gorm
 - Mysql、Postgresql 数据库驱动支持
 - Redis
-- RabbitMQ 生产消费者
-- JWT 认证
+- RabbitMQ 消息队列
 - Cron 定时
 - gRPC 支持 RPC 调用
 - SSE 协议
