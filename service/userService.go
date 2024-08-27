@@ -14,6 +14,7 @@ import (
 
 type UserService struct {
 	UserModel *entity.UserModel
+	// RedisService *RedisService // TODO 封装
 }
 
 func NewUserService(userModel *entity.UserModel) *UserService {
