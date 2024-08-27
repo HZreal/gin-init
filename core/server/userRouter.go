@@ -3,6 +3,7 @@ package server
 import (
 	"gin-init/core/wire"
 	"gin-init/middleware"
+	"time"
 )
 
 func addUserRouter() {
@@ -13,7 +14,7 @@ func addUserRouter() {
 	{
 		userGroup.GET("info/all")
 		// userGroup.GET("info/detail", userController.GetUserDetail)
-		userGroup.GET("info/detail", appController.UserController.GetUserDetail)
+		userGroup.GET("info/detail", middleware.RateLimitMiddleware(5, time.Minute), appController.UserController.GetUserDetail)
 		// userGroup.POST("info/list", middleware.JWTMiddleware(), userController.GetUserList)
 		userGroup.POST("info/list", middleware.JWTMiddleware(), appController.UserController.GetUserList)
 		// userGroup.POST("info/create", userController.CreateUser)
