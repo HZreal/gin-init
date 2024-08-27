@@ -31,6 +31,13 @@ redis:
   password:
   DB: 15
 
+rabbitmq:
+  host: 127.0.0.1
+  port: 5672
+  username: admin
+  password: root123456
+  vhost: local
+
 grpc:
   host: 127.0.0.1
   port: 50051

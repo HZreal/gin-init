@@ -8,6 +8,7 @@ package rabbitMQ
  */
 
 import (
+	"gin-init/config"
 	"gin-init/consumers"
 	"github.com/streadway/amqp"
 	"log"
@@ -47,7 +48,8 @@ func startConsumers() {
 
 func Start() {
 	var err error
-	Conn, err = amqp.Dial("amqp://admin:root123456@localhost:5672/%2Flocal")
+	// Conn, err = amqp.Dial("amqp://admin:root123456@localhost:5672/%2Flocal")
+	Conn, err = amqp.Dial(config.Conf.RabbitMQ.GetUrl())
 	if err != nil {
 		log.Fatalf("Failed to connect to RabbitMQ: %v", err)
 	}

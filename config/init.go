@@ -11,6 +11,7 @@ type Config struct {
 	Mysql      *MysqlConfig      `yaml:"mysql"`
 	Postgresql *PostgresqlConfig `yaml:"postgresql"`
 	Redis      *RedisConfig      `yaml:"redis"`
+	RabbitMQ   *RabbitMQConfig   `yaml:"rabbitmq"`
 	GRPC       *GRPCConfig       `yaml:"grpc"`
 }
 
