@@ -28,7 +28,7 @@ func ExceptionInterceptorMiddleware() gin.HandlerFunc {
 					c.JSON(http.StatusInternalServerError, common.FailedWithMsg(msg))
 				} else {
 					// 处理其他未知的 panic
-					c.JSON(http.StatusInternalServerError, common.Failed(common.UKnownError))
+					c.JSON(http.StatusInternalServerError, common.Failed(common.UnKnownError))
 				}
 				c.Abort()
 			}
@@ -43,7 +43,7 @@ func ExceptionMiddleware(c *gin.Context) {
 	defer func() {
 		if err := recover(); err != nil {
 			// 简单返回友好提示，具体可自定义发生错误后处理逻辑
-			c.JSON(http.StatusInternalServerError, common.Failed(common.UKnownError))
+			c.JSON(http.StatusInternalServerError, common.Failed(common.UnKnownError))
 			c.Abort()
 		}
 	}()

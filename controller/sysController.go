@@ -28,7 +28,7 @@ func (uC *SysController) Login(c *gin.Context) {
 	//
 	data, err := uC.sysService.Login(c, loginData)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, common.Failed(common.UKnownError))
+		c.JSON(http.StatusInternalServerError, common.Failed(common.UnKnownError))
 	}
 
 	c.JSON(http.StatusOK, common.SuccessWithData(data))

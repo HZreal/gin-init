@@ -19,7 +19,7 @@ func NewDemoController(demoService *service.DemoService) *DemoController {
 func (d *DemoController) SendMsgWithRabbitMQ(c *gin.Context) {
 	err := d.demoService.SendMsgWithRabbitMQ(c)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, common.Failed(common.UKnownError))
+		c.JSON(http.StatusInternalServerError, common.Failed(common.UnKnownError))
 	}
 	c.JSON(http.StatusOK, common.SuccessWithoutData())
 }

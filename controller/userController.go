@@ -35,7 +35,7 @@ func (uC *UserController) GetUserList(c *gin.Context) {
 	//
 	data, err := uC.UserService.GetUserList(c, query, body)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, common.Failed(common.UKnownError))
+		c.JSON(http.StatusInternalServerError, common.Failed(common.UnKnownError))
 	}
 
 	c.JSON(http.StatusOK, common.SuccessWithData(data))
@@ -51,7 +51,7 @@ func (uC *UserController) GetUserDetail(c *gin.Context) {
 	// 调用服务层
 	data, err := uC.UserService.GetUserDetail(c, id)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, common.Failed(common.UKnownError))
+		c.JSON(http.StatusInternalServerError, common.Failed(common.UnKnownError))
 	}
 
 	c.JSON(http.StatusOK, common.SuccessWithData(data))

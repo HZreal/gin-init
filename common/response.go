@@ -31,7 +31,7 @@ var (
 	ParamsError    = ErrorCode{904030, "请求参数错误"}
 	NoAuthError    = ErrorCode{904010, "未认证!"}
 	OperationError = ErrorCode{905011, "操作错误"}
-	UKnownError    = ErrorCode{999999, "未知错误!"}
+	UnKnownError   = ErrorCode{999999, "未知错误!"}
 )
 
 func Failed(err ErrorCode) *Response {
