@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gin-init/config"
 	"gin-init/core/socketio"
+	"gin-init/middleware"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"time"
@@ -23,8 +24,9 @@ func init() {
 	//
 	// r.Use(gin.Logger())
 
-	//
+	// 异常拦截
 	// r.Use(gin.Recovery())
+	r.Use(middleware.ExceptionInterceptorMiddleware())
 
 	// cors
 	// 全局注册 CORS 中间件

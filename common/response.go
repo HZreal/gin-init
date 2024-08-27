@@ -27,15 +27,25 @@ type ErrorCode struct {
 	Msg  string `json:"msg"`
 }
 
-var ParamsError = ErrorCode{904030, "请求参数错误"}
-var NoAuth = ErrorCode{904010, "未认证!"}
-
-var OperationError = ErrorCode{905011, "操作错误"}
-var UKnownError = ErrorCode{999999, "未知错误!"}
+var (
+	ParamsError    = ErrorCode{904030, "请求参数错误"}
+	NoAuthError    = ErrorCode{904010, "未认证!"}
+	OperationError = ErrorCode{905011, "操作错误"}
+	UKnownError    = ErrorCode{999999, "未知错误!"}
+)
 
 func Failed(err ErrorCode) *Response {
 	return &Response{
 		Code: err.Code,
 		Msg:  err.Msg,
+		Data: nil,
+	}
+}
+
+func FailedWithMsg(msg string) *Response {
+	return &Response{
+		Code: 999999,
+		Msg:  msg,
+		Data: nil,
 	}
 }
