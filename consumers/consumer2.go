@@ -8,10 +8,9 @@ package consumers
  */
 
 import (
-	"github.com/streadway/amqp"
 	"log"
 )
 
-func HandleMessage2(d amqp.Delivery) {
-	log.Printf("Received a message from queue2: %s", d.Body)
+func HandleMessage2(msg []byte) {
+	log.Printf("Received a message from queue2: %s", msg)
 }

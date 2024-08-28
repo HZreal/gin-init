@@ -16,11 +16,7 @@ func NewDemoController(demoService *service.DemoService) *DemoController {
 }
 
 func (d *DemoController) SendMsgWithRabbitMQ(c *gin.Context) {
-	err := d.demoService.SendMsgWithRabbitMQ(c)
-	if err != nil {
-		common.Failed(c, common.UnKnownError)
-		return
-	}
+	d.demoService.SendMsgWithRabbitMQ(c)
 
 	//
 	common.SuccessWithoutData(c)

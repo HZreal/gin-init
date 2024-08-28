@@ -9,8 +9,6 @@ package service
 
 import (
 	"encoding/json"
-	"fmt"
-	"gin-init/mq"
 	"gin-init/mq/rabbitMQ"
 	"github.com/gin-gonic/gin"
 )
@@ -23,23 +21,22 @@ func NewDemoService(rabbitMQService *rabbitMQ.RabbitMQService) *DemoService {
 	return &DemoService{RabbitMQService: rabbitMQService}
 }
 
-func (s *DemoService) SendMsgWithRabbitMQ(c *gin.Context) (err error) {
+func (s *DemoService) SendMsgWithRabbitMQ(c *gin.Context) {
 	// mock a msg
 	var msg = struct {
-		id   int
-		data string
+		Id   int
+		Data string
 	}{
-		id:   1,
-		data: "hello world",
+		Id:   1,
+		Data: "hello world",
 	}
 
 	body, err := json.Marshal(msg)
 	if err != nil {
-		return fmt.Errorf("failed to marshal message: %v", err)
+		panic(err)
 	}
 
 	//
-	_ = s.RabbitMQService.Publish(mq.DemoTopic.Exchange, mq.DemoTopic.Route, body)
+	s.RabbitMQService.SendMQMsq111(body)
 
-	return nil
 }

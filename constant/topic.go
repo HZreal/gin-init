@@ -1,4 +1,4 @@
-package mq
+package constant
 
 /**
  * @Author elastic·H
