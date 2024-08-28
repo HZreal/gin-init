@@ -2,13 +2,13 @@ package service
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"gin-init/model/dto"
 	"gin-init/model/entity"
 	"gin-init/model/vo"
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis/v8"
+	"log"
 	"time"
 )
 
@@ -21,7 +21,7 @@ func NewUserService(userModel *entity.UserModel) *UserService {
 	return &UserService{UserModel: userModel}
 }
 
-func (uS *UserService) GetUserList(c *gin.Context, query dto.QueryPagination, body map[string]interface{}) (result vo.PaginationResult, err error) {
+func (uS *UserService) GetUserList(c *gin.Context, query dto.QueryPagination, body map[string]interface{}) (result *vo.PaginationResult) {
 	//
 
 	var userInfos []vo.UserSingle
@@ -43,18 +43,16 @@ func (uS *UserService) GetUserList(c *gin.Context, query dto.QueryPagination, bo
 	}
 
 	//
-	return vo.PaginationResult{
+	return &vo.PaginationResult{
 		Total:       int(total),
 		Pages:       pages,
 		CurrentPage: page,
 		PageSize:    pageSize,
 		Records:     userInfos,
-	}, nil
+	}
 }
 
-func (uS *UserService) GetUserDetail(c *gin.Context, id string) (userInfo vo.UserSingle, err error) {
-
-	//
+func (uS *UserService) GetUserDetail(c *gin.Context, id string) (userInfo vo.UserSingle) {
 	//
 	key := fmt.Sprintf("tmp:user:id:%s", id)
 	cachedData, err := rdb.Get(c, key).Result()
@@ -62,39 +60,36 @@ func (uS *UserService) GetUserDetail(c *gin.Context, id string) (userInfo vo.Use
 		// 无缓存
 		affected := db.Take(&entity.UserModel{}, id).Scan(&userInfo).RowsAffected
 		if affected == 0 {
-			// c.JSON(http.StatusInternalServerError, gin.H{"message": "query error"})
-			return userInfo, errors.New("query error")
+			log.Printf("No user found with ID: %s", id)
+			return
 		}
 
 		// 将查询结果序列化为 JSON 字符串
 		unitInfoJson, err := json.Marshal(userInfo)
 		if err != nil {
-			// c.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to serialize data"})
-			return userInfo, errors.New("failed to serialize data")
+			log.Printf("Failed to serialize data for user ID: %s, error: %v", id, err)
+			panic("failed to serialize data")
 		}
 
 		// 将数据缓存到 Redis，设置缓存过期时间为 30 S
 		err = rdb.Set(c, key, unitInfoJson, 30*time.Second).Err()
 		if err != nil {
-			// c.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to set cache"})
-			return userInfo, errors.New("failed to set cache")
+			panic("failed to save data")
 		}
 
-		// c.JSON(http.StatusOK, userInfo)
-		return userInfo, nil
+		return userInfo
 
 	} else if err != nil {
-		// c.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to get cache"})
-		return userInfo, errors.New("failed to get cache")
+		log.Printf("Failed to get cache for key: %s, error: %v", key, err)
+		panic("failed to get cache")
 	} else {
 		// 如果缓存中有数据，返回缓存数据
 		if err := json.Unmarshal([]byte(cachedData), &userInfo); err != nil {
-			// c.JSON(http.StatusInternalServerError, gin.H{"message": "Failed to deserialize cache data"})
-			return userInfo, errors.New("failed to deserialize cache data")
+			log.Printf("Failed to deserialize cache data for user ID: %s, error: %v", id, err)
+			panic("failed to deserialize cache data")
 		}
 
-		// c.JSON(http.StatusOK, userInfo)
-		return userInfo, nil
+		return userInfo
 	}
 
 }

@@ -32,11 +32,7 @@ func (uC *UserController) GetUserList(c *gin.Context) {
 	}
 
 	//
-	data, err := uC.UserService.GetUserList(c, query, body)
-	if err != nil {
-		common.Failed(c, common.UnKnownError)
-		return
-	}
+	data := uC.UserService.GetUserList(c, query, body)
 
 	common.SuccessWithData(c, data)
 }
@@ -48,11 +44,7 @@ func (uC *UserController) GetUserDetail(c *gin.Context) {
 	// 校验
 
 	// 调用服务层
-	data, err := uC.UserService.GetUserDetail(c, id)
-	if err != nil {
-		common.Failed(c, common.UnKnownError)
-		return
-	}
+	data := uC.UserService.GetUserDetail(c, id)
 
 	//
 	common.SuccessWithData(c, data)
