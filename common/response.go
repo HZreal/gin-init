@@ -1,25 +1,29 @@
 package common
 
+import (
+	"github.com/gin-gonic/gin"
+	"net/http"
+)
+
 type Response struct {
 	Code int         `json:"code"`
 	Msg  string      `json:"msg"`
 	Data interface{} `json:"data"`
 }
 
-func SuccessWithData(data interface{}) *Response {
-	return &Response{
+// SuccessWithData 成功且返回数据
+func SuccessWithData(c *gin.Context, data interface{}) {
+	response := &Response{
 		Code: 0,
 		Msg:  "success",
 		Data: data,
 	}
+	c.JSON(http.StatusOK, response)
 }
 
-func SuccessWithoutData() *Response {
-	return &Response{
-		Code: 0,
-		Msg:  "success",
-		Data: nil,
-	}
+// SuccessWithoutData 成功但不返回数据
+func SuccessWithoutData(c *gin.Context) {
+	SuccessWithData(c, nil)
 }
 
 type ErrorCode struct {
@@ -35,18 +39,25 @@ var (
 	UnKnownError         = ErrorCode{999999, "未知错误!"}
 )
 
-func Failed(err ErrorCode) *Response {
-	return &Response{
+// Failed 失败返回错误对象
+func Failed(c *gin.Context, err ErrorCode) {
+	response := &Response{
 		Code: err.Code,
 		Msg:  err.Msg,
 		Data: nil,
 	}
+
+	c.JSON(http.StatusOK, response)
+
 }
 
-func FailedWithMsg(msg string) *Response {
-	return &Response{
+// FailedWithMsg 失败返回错误字符串
+func FailedWithMsg(c *gin.Context, msg string) {
+	response := &Response{
 		Code: 999999,
 		Msg:  msg,
 		Data: nil,
 	}
+
+	c.JSON(http.StatusOK, response)
 }

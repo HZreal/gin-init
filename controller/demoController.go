@@ -4,7 +4,6 @@ import (
 	"gin-init/common"
 	"gin-init/service"
 	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
 type DemoController struct {
@@ -19,7 +18,10 @@ func NewDemoController(demoService *service.DemoService) *DemoController {
 func (d *DemoController) SendMsgWithRabbitMQ(c *gin.Context) {
 	err := d.demoService.SendMsgWithRabbitMQ(c)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, common.Failed(common.UnKnownError))
+		common.Failed(c, common.UnKnownError)
+		return
 	}
-	c.JSON(http.StatusOK, common.SuccessWithoutData())
+
+	//
+	common.SuccessWithoutData(c)
 }

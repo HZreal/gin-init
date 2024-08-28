@@ -5,7 +5,6 @@ import (
 	"gin-init/model/dto"
 	"gin-init/service"
 	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
 type UserController struct {
@@ -21,25 +20,25 @@ func (uC *UserController) GetUserList(c *gin.Context) {
 
 	var query dto.QueryPagination
 	if err := c.ShouldBindQuery(&query); err != nil {
-		c.JSON(http.StatusBadRequest, common.Failed(common.ParamsError))
+		common.Failed(c, common.ParamsError)
 		return
 	}
 
 	// var body dto.UserListFilterDTO
 	var body map[string]interface{}
 	if err := c.ShouldBindJSON(&body); err != nil {
-		c.JSON(http.StatusBadRequest, common.Failed(common.ParamsError))
+		common.Failed(c, common.ParamsError)
 		return
 	}
 
 	//
 	data, err := uC.UserService.GetUserList(c, query, body)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, common.Failed(common.UnKnownError))
+		common.Failed(c, common.UnKnownError)
+		return
 	}
 
-	c.JSON(http.StatusOK, common.SuccessWithData(data))
-
+	common.SuccessWithData(c, data)
 }
 
 func (uC *UserController) GetUserDetail(c *gin.Context) {
@@ -51,10 +50,12 @@ func (uC *UserController) GetUserDetail(c *gin.Context) {
 	// 调用服务层
 	data, err := uC.UserService.GetUserDetail(c, id)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, common.Failed(common.UnKnownError))
+		common.Failed(c, common.UnKnownError)
+		return
 	}
 
-	c.JSON(http.StatusOK, common.SuccessWithData(data))
+	//
+	common.SuccessWithData(c, data)
 }
 
 func (uC *UserController) CreateUser(context *gin.Context) {

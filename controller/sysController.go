@@ -21,17 +21,19 @@ func (uC *SysController) Login(c *gin.Context) {
 	//
 	var loginData dto.LoginData
 	if err := c.ShouldBindJSON(&loginData); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request"})
-		// return
+		common.Failed(c, common.ParamsError)
+		return
 	}
 
 	//
 	data, err := uC.sysService.Login(c, loginData)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, common.Failed(common.UnKnownError))
+		common.Failed(c, common.UnKnownError)
+		return
 	}
 
-	c.JSON(http.StatusOK, common.SuccessWithData(data))
+	//
+	common.SuccessWithData(c, data)
 
 }
 
