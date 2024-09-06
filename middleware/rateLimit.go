@@ -8,7 +8,7 @@ package middleware
  */
 
 import (
-	"gin-init/common"
+	"gin-init/common/response"
 	"github.com/gin-gonic/gin"
 	"time"
 )
@@ -27,7 +27,7 @@ func RateLimitMiddleware(maxRequests int, resetTime time.Duration) gin.HandlerFu
 
 		if requests >= maxRequests {
 			// 如果超出请求限制，返回 429 错误
-			common.Failed(c, common.TooManyRequestsError)
+			response.Failed(c, response.TooManyRequestsError)
 			c.Abort()
 		}
 

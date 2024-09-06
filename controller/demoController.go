@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"gin-init/common"
+	"gin-init/common/response"
 	"gin-init/service"
 	"github.com/gin-gonic/gin"
 )
@@ -19,5 +19,5 @@ func (d *DemoController) SendMsgWithRabbitMQ(c *gin.Context) {
 	d.demoService.SendMsgWithRabbitMQ(c)
 
 	//
-	common.SuccessWithoutData(c)
+	response.SuccessWithoutData(c)
 }

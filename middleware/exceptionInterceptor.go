@@ -8,7 +8,7 @@ package middleware
  */
 
 import (
-	"gin-init/common"
+	"gin-init/common/response"
 	"github.com/gin-gonic/gin"
 )
 
@@ -19,15 +19,15 @@ func ExceptionInterceptorMiddleware() gin.HandlerFunc {
 		defer func() {
 			if err := recover(); err != nil {
 				// 检查是否为 ErrorCode 类型
-				if errCode, ok := err.(common.ErrorCode); ok {
+				if errCode, ok := err.(response.ErrorCode); ok {
 					// 返回自定义错误码和错误信息
-					common.Failed(c, errCode)
+					response.Failed(c, errCode)
 				} else if msg, ok2 := err.(string); ok2 {
 					// 若 panic 一个字符串
-					common.FailedWithMsg(c, msg)
+					response.FailedWithMsg(c, msg)
 				} else {
 					// 处理其他未知的 panic
-					common.Failed(c, common.UnKnownError)
+					response.Failed(c, response.UnKnownError)
 				}
 				c.Abort()
 			}
@@ -42,7 +42,7 @@ func ExceptionMiddleware(c *gin.Context) {
 	defer func() {
 		if err := recover(); err != nil {
 			// 简单返回友好提示，具体可自定义发生错误后处理逻辑
-			common.Failed(c, common.UnKnownError)
+			response.Failed(c, response.UnKnownError)
 			c.Abort()
 		}
 	}()

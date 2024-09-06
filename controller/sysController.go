@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"gin-init/common"
+	"gin-init/common/response"
 	"gin-init/model/dto"
 	"gin-init/service"
 	"github.com/gin-gonic/gin"
@@ -21,19 +21,19 @@ func (uC *SysController) Login(c *gin.Context) {
 	//
 	var loginData dto.LoginData
 	if err := c.ShouldBindJSON(&loginData); err != nil {
-		common.Failed(c, common.ParamsError)
+		response.Failed(c, response.ParamsError)
 		return
 	}
 
 	//
 	data, err := uC.sysService.Login(c, loginData)
 	if err != nil {
-		common.Failed(c, common.UnKnownError)
+		response.Failed(c, response.UnKnownError)
 		return
 	}
 
 	//
-	common.SuccessWithData(c, data)
+	response.SuccessWithData(c, data)
 
 }
 

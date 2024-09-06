@@ -10,6 +10,10 @@ type QueryPagination struct {
 	SortOrder string `form:"sortOrder"`
 }
 
-type BodyId struct {
+type BodyJsonId struct {
+	Id int `json:"id" binding:"required,min=1"`
+}
+
+type QueryId struct {
 	Id int `form:"id" binding:"required,min=1"`
 }

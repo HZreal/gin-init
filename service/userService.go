@@ -21,10 +21,19 @@ func NewUserService(userModel *entity.UserModel) *UserService {
 	return &UserService{UserModel: userModel}
 }
 
+func (uS *UserService) GetAllUser(c *gin.Context, body dto.UsersFilterDTO) []vo.UserDetailInfo {
+	var users []vo.UserDetailInfo
+	if err := db.Model(uS.UserModel).Where(body).Find(&users).Error; err != nil {
+		log.Printf("query users err:%v", err)
+		panic(err)
+	}
+	return users
+}
+
 func (uS *UserService) GetUserList(c *gin.Context, query dto.QueryPagination, body map[string]interface{}) (result *vo.PaginationResult) {
 	//
 
-	var userInfos []vo.UserSingle
+	var userInfos []vo.UserDetailInfo
 	var total int64
 	page, pageSize := query.Page, query.PageSize
 
@@ -52,7 +61,7 @@ func (uS *UserService) GetUserList(c *gin.Context, query dto.QueryPagination, bo
 	}
 }
 
-func (uS *UserService) GetUserDetail(c *gin.Context, id string) (userInfo vo.UserSingle) {
+func (uS *UserService) GetUserDetail(c *gin.Context, id int) (userInfo vo.UserDetailInfo) {
 	//
 	key := fmt.Sprintf("tmp:user:id:%s", id)
 	cachedData, err := rdb.Get(c, key).Result()
@@ -103,4 +112,62 @@ func (uS *UserService) CheckUser(loginData dto.LoginData) bool {
 		return false
 	}
 	return true
+}
+
+func (uS *UserService) CreateUser(c *gin.Context, body dto.UserCreateDTO) vo.UserDetailInfo {
+	user := entity.UserModel{
+		Username: body.Username,
+		Password: body.Password,
+		Phone:    body.Phone,
+		Age:      body.Age,
+	}
+
+	if result := db.Create(&user); result.Error != nil {
+		log.Printf("Failed to create user, error: %v", result.Error)
+		panic("failed to create user")
+	}
+	return vo.UserDetailInfo{
+		Id:       user.Id,
+		Username: user.Username,
+		Phone:    user.Phone,
+		Age:      user.Age,
+	}
+
+}
+
+func (uS *UserService) UpdateUser(c *gin.Context, body dto.UserUpdateDTO) vo.UserDetailInfo {
+	id := body.Id
+	var user entity.UserModel
+	if result := db.First(&user, id); result.Error != nil {
+		log.Printf("Failed to find user, error: %v", result.Error)
+		panic("failed to find user")
+	}
+
+	//
+	result := db.Model(&user).Where("id = ?", id).Updates(body)
+	if result.Error != nil {
+		log.Printf("Failed to update user, error: %v", result.Error)
+		panic("failed to update user")
+	}
+	return vo.UserDetailInfo{
+		Id:       user.Id,
+		Username: user.Username,
+		Phone:    user.Phone,
+		Age:      user.Age,
+	}
+}
+
+func (uS *UserService) DeleteUser(c *gin.Context, id int) {
+	if result := db.First(uS.UserModel, id); result.Error != nil {
+		log.Printf("Failed to find user, error: %v", result.Error)
+		panic("failed to find user")
+	}
+
+	//
+	result := db.Delete(uS.UserModel, id)
+	if result.Error != nil {
+		log.Printf("Failed to delete user, error: %v", result.Error)
+		panic("failed to delete user")
+	}
+
 }
