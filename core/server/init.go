@@ -6,6 +6,7 @@ import (
 	"gin-init/core/socketio"
 	"gin-init/middleware"
 	"github.com/gin-contrib/cors"
+	ginzap "github.com/gin-contrib/zap"
 	"github.com/gin-gonic/gin"
 	"time"
 )
@@ -21,8 +22,11 @@ func init() {
 	//
 	r = gin.Default()
 
-	//
+	// 日志
 	// r.Use(gin.Logger())
+	// 将 Zap 日志器作为 Gin 的日志中间件
+	r.Use(ginzap.Ginzap(Logger, time.RFC3339, true))
+	r.Use(ginzap.RecoveryWithZap(Logger, true))
 
 	// 异常拦截
 	// r.Use(gin.Recovery())
