@@ -9,14 +9,37 @@ package routes
 
 import (
 	"gin-init/core/wire"
+	"github.com/gin-gonic/gin"
 )
 
-var AppController *wire.AppControllers
+var (
+	AppController    *wire.AppControllers
+	routerRegistrars []RouterRegistrar
+)
 
 func init() {
+	//
 	var err error
 	AppController, err = wire.InitializeApp()
 	if err != nil {
 		panic(err)
 	}
+
+	//
+	routerRegistrars = []RouterRegistrar{
+		DemoRouter{},
+		SysRouter{},
+		UserRouter{},
+		// 可以继续添加更多的路由组
+	}
+}
+
+// RouterRegistrar
+type RouterRegistrar interface {
+	RegisterRoutes(r *gin.RouterGroup)
+}
+
+// GetRouterRegistrars 获取所有注册器
+func GetRouterRegistrars() []RouterRegistrar {
+	return routerRegistrars
 }

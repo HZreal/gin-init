@@ -56,14 +56,15 @@ func init() {
 
 	// routers definition
 	routerGroup = r.Group("api")
-	//
+	// registerRoutes
 	registerRoutes()
 }
 
 func registerRoutes() {
-	routes.AddSysRouter(routerGroup)
-	routes.AddDemoRouter(routerGroup)
-	routes.AddUserRouter(routerGroup)
+	routerRegistrars := routes.GetRouterRegistrars()
+	for _, registrar := range routerRegistrars {
+		registrar.RegisterRoutes(routerGroup)
+	}
 }
 
 func StartGinServer() {
