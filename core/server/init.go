@@ -5,6 +5,7 @@ import (
 	"gin-init/config"
 	"gin-init/core/socketio"
 	"gin-init/middleware"
+	"gin-init/routes"
 	"github.com/gin-contrib/cors"
 	ginzap "github.com/gin-contrib/zap"
 	"github.com/gin-gonic/gin"
@@ -13,7 +14,7 @@ import (
 
 var r *gin.Engine
 
-var apiGroup *gin.RouterGroup
+var routerGroup *gin.RouterGroup
 
 func init() {
 	//
@@ -54,15 +55,15 @@ func init() {
 	r.Static("/public", "./public")
 
 	// routers definition
-	apiGroup = r.Group("api")
+	routerGroup = r.Group("api")
 	//
 	registerRoutes()
 }
 
 func registerRoutes() {
-	addSysRouter()
-	addDemoRouter()
-	addUserRouter()
+	routes.AddSysRouter(routerGroup)
+	routes.AddDemoRouter(routerGroup)
+	routes.AddUserRouter(routerGroup)
 }
 
 func StartGinServer() {
