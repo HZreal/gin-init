@@ -21,7 +21,8 @@ func InitMysql() {
 	fmt.Println("[Success] Mysql数据库连接成功！！！")
 
 	// 迁移
-	// err = conn.AutoMigrate(&entity.User{}, &entity.UnitInfo{})
+	// TODO UnitInfo 迁移有问题
+	// err = conn.AutoMigrate(&entity.UserModel{}, &entity.UnitInfo{})
 	// if err != nil {
 	// 	fmt.Println("[database mysql] 创建表失败！")
 	// }
