@@ -17,16 +17,16 @@ import (
 
 var Conn *amqp.Connection
 
-var producer *RabbitMQProducer
+// var producer *RabbitMQProducer
 
 var consumer *RabbitMQConsumer
 
 /*
 * 生产者
  */
-func createGlobalProducer() {
-	producer = NewProducer(Conn)
-}
+// func createGlobalProducer() {
+// 	producer = NewProducer(Conn)
+// }
 
 /*
 * 消费者
@@ -63,7 +63,7 @@ func Start() {
 	log.Println("Connected to RabbitMQ")
 
 	//
-	createGlobalProducer()
+	// createGlobalProducer()
 
 	//
 	startConsumers()

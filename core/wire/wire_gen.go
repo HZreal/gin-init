@@ -9,7 +9,6 @@ package wire
 import (
 	"gin-init/controller"
 	"gin-init/model/entity"
-	"gin-init/mq/rabbitMQ"
 	"gin-init/service"
 	"gin-init/service/common"
 	"github.com/google/wire"
@@ -19,7 +18,7 @@ import (
 
 // InitializeApp 初始化整个应用的控制器
 func InitializeApp() (*AppControllers, error) {
-	rabbitMQService := rabbitMQ.NewRabbitMQService()
+	rabbitMQService := common.NewRabbitMQService()
 	demoService := service.NewDemoService(rabbitMQService)
 	demoController := controller.NewDemoController(demoService)
 	userModel := entity.NewUserModel()
@@ -38,7 +37,7 @@ func InitializeApp() (*AppControllers, error) {
 
 // wire.go:
 
-var DemoSet = wire.NewSet(controller.NewDemoController, service.NewDemoService, rabbitMQ.NewRabbitMQService)
+var DemoSet = wire.NewSet(controller.NewDemoController, service.NewDemoService, common.NewRabbitMQService)
 
 var SysSet = wire.NewSet(controller.NewSysController, service.NewSysService)
 

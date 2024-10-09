@@ -6,7 +6,6 @@ package wire
 import (
 	"gin-init/controller"
 	"gin-init/model/entity"
-	"gin-init/mq/rabbitMQ"
 	"gin-init/service"
 	"gin-init/service/common"
 	"github.com/google/wire"
@@ -17,7 +16,7 @@ import (
 var DemoSet = wire.NewSet(
 	controller.NewDemoController,
 	service.NewDemoService,
-	rabbitMQ.NewRabbitMQService,
+	common.NewRabbitMQService,
 )
 
 var SysSet = wire.NewSet(

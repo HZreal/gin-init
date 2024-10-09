@@ -9,15 +9,15 @@ package service
 
 import (
 	"encoding/json"
-	"gin-init/mq/rabbitMQ"
+	"gin-init/service/common"
 	"github.com/gin-gonic/gin"
 )
 
 type DemoService struct {
-	RabbitMQService *rabbitMQ.RabbitMQService
+	RabbitMQService *common.RabbitMQService
 }
 
-func NewDemoService(rabbitMQService *rabbitMQ.RabbitMQService) *DemoService {
+func NewDemoService(rabbitMQService *common.RabbitMQService) *DemoService {
 	return &DemoService{RabbitMQService: rabbitMQService}
 }
 
