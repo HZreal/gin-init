@@ -6,6 +6,7 @@ import (
 	"gin-init/model/dto"
 	"gin-init/model/entity"
 	"gin-init/model/vo"
+	"gin-init/service/common"
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis/v8"
 	"log"
@@ -13,12 +14,15 @@ import (
 )
 
 type UserService struct {
-	UserModel *entity.UserModel
-	// RedisService *RedisService // TODO 封装
+	UserModel    *entity.UserModel
+	RedisService *common.RedisService
 }
 
-func NewUserService(userModel *entity.UserModel) *UserService {
-	return &UserService{UserModel: userModel}
+func NewUserService(userModel *entity.UserModel, redisService *common.RedisService) *UserService {
+	return &UserService{
+		UserModel:    userModel,
+		RedisService: redisService,
+	}
 }
 
 func (uS *UserService) GetAllUser(c *gin.Context, body dto.UsersFilterDTO) []vo.UserDetailInfo {
@@ -64,7 +68,7 @@ func (uS *UserService) GetUserList(c *gin.Context, query dto.QueryPagination, bo
 func (uS *UserService) GetUserDetail(c *gin.Context, id int) (userInfo vo.UserDetailInfo) {
 	//
 	key := fmt.Sprintf("tmp:user:id:%s", id)
-	cachedData, err := rdb.Get(c, key).Result()
+	cachedData, err := uS.RedisService.Client.Get(c, key).Result()
 	if err == redis.Nil {
 		// 无缓存
 		affected := db.Take(&entity.UserModel{}, id).Scan(&userInfo).RowsAffected
@@ -81,7 +85,7 @@ func (uS *UserService) GetUserDetail(c *gin.Context, id int) (userInfo vo.UserDe
 		}
 
 		// 将数据缓存到 Redis，设置缓存过期时间为 30 S
-		err = rdb.Set(c, key, unitInfoJson, 30*time.Second).Err()
+		err = uS.RedisService.Client.Set(c, key, unitInfoJson, 30*time.Second).Err()
 		if err != nil {
 			panic("failed to save data")
 		}
