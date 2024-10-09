@@ -27,14 +27,14 @@ func init() {
 
 	//
 	routerRegistrars = []RouterRegistrar{
-		DemoRouter{},
-		SysRouter{},
-		UserRouter{},
+		&DemoRouter{},
+		&SysRouter{},
+		&UserRouter{},
 		// 可以继续添加更多的路由组
 	}
 }
 
-// RouterRegistrar
+// RouterRegistrar 路由组注册接口
 type RouterRegistrar interface {
 	RegisterRoutes(r *gin.RouterGroup)
 }
