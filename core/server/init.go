@@ -53,17 +53,11 @@ func init() {
 	// 静态文件（页面等）
 	r.Static("/public", "./public")
 
-	// routers definition
+	// router 组定义
 	routerGroup = r.Group("api")
-	// registerRoutes
-	registerRoutes()
-}
 
-func registerRoutes() {
-	routerRegistrars := routes.GetRouterRegistrars()
-	for _, registrar := range routerRegistrars {
-		registrar.RegisterRoutes(routerGroup)
-	}
+	// 注册路由
+	routes.RegisterRoutes(routerGroup)
 }
 
 func StartGinServer() {
