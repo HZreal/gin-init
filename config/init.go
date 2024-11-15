@@ -6,15 +6,6 @@ import (
 	"os"
 )
 
-type Config struct {
-	Gin        GinConfig         `yaml:"gin"`
-	Mysql      *MysqlConfig      `yaml:"mysql"`
-	Postgresql *PostgresqlConfig `yaml:"postgresql"`
-	Redis      *RedisConfig      `yaml:"redis"`
-	RabbitMQ   *RabbitMQConfig   `yaml:"rabbitmq"`
-	GRPC       *GRPCConfig       `yaml:"grpc"`
-}
-
 var Conf Config
 
 func init() {
