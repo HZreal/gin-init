@@ -10,7 +10,7 @@ package rabbitMQ
 import (
 	"gin-init/common/constant"
 	"gin-init/config"
-	"gin-init/consumers"
+	"gin-init/job/consumers"
 	"github.com/streadway/amqp"
 	"log"
 )
