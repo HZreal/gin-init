@@ -9,8 +9,8 @@ package common
 
 import (
 	"fmt"
+	"gin-init/common/constant"
 	"gin-init/config"
-	"gin-init/constant"
 	"github.com/streadway/amqp"
 	"log"
 	"sync"

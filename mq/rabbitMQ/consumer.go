@@ -2,7 +2,7 @@ package rabbitMQ
 
 import (
 	"fmt"
-	"gin-init/constant"
+	"gin-init/common/constant"
 	"github.com/streadway/amqp"
 	"log"
 )
