@@ -12,6 +12,7 @@ var db *gorm.DB
 // var ctx context.Context
 
 func init() {
+	database.InitialDB()
 	db = database.DB
 	// rdb = database.RDB
 	// ctx = database.Ctx

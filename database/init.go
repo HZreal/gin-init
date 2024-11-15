@@ -10,7 +10,7 @@ var RDB *redis.Client
 
 // var Ctx = context.Background()
 
-func init() {
+func InitialDB() {
 	// InitRedis()
 	InitMysql()
 	// InitPostgresql()

@@ -15,7 +15,7 @@ var r *gin.Engine
 
 var routerGroup *gin.RouterGroup
 
-func init() {
+func StartGinServer() {
 	//
 	gin.SetMode(config.Conf.Gin.Mode)
 
@@ -58,9 +58,8 @@ func init() {
 
 	// 注册路由
 	routes.RegisterRoutes(routerGroup)
-}
 
-func StartGinServer() {
+	// 启动
 	err := r.Run(config.Conf.Gin.GetAddr())
 	if err != nil {
 		fmt.Println("[Error] r.Run " + err.Error())
