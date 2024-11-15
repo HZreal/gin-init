@@ -27,9 +27,9 @@ postgresql:
 
 redis:
   host: 127.0.0.1
-  port: 56378
+  port: 56379
   password:
-  DB: 15
+  DB: 0
 
 rabbitmq:
   host: 127.0.0.1
