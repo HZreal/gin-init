@@ -8,7 +8,7 @@ import (
 
 var Conf Config
 
-func init() {
+func Load() {
 	// yamlFile, err := os.ReadFile("./config/settings.yaml")
 	// if err != nil {
 	// 	fmt.Println("[config init error] os.ReadFile 配置文件读取失败 " + err.Error())
@@ -31,13 +31,13 @@ func init() {
 
 	// 读取配置文件
 	if err := viper.ReadInConfig(); err != nil {
-		log.Fatalf("Error reading config file, %s", err)
+		log.Fatalf("[ERROR] Reading config file, %s", err)
 	}
 
 	// 将配置文件内容反序列化到结构体
 	if err := viper.Unmarshal(&Conf); err != nil {
-		log.Fatalf("Unable to decode into struct, %v", err)
+		log.Fatalf("[ERROR] Unable to decode into struct, %v", err)
 	}
 
-	log.Println("[Success] 配置文件读取成功！！！")
+	log.Println("[INFO] 配置文件读取成功！！！")
 }

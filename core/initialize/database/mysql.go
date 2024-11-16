@@ -1,11 +1,13 @@
 package database
 
 import (
-	"fmt"
 	"gin-init/config"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"log"
 )
+
+var DB *gorm.DB
 
 func InitMysql() {
 	// 连接 Mysql, 获得 DB 实例
@@ -13,12 +15,12 @@ func InitMysql() {
 		SkipDefaultTransaction: true,
 	})
 	if err != nil {
-		fmt.Println("[Mysql init error] 连接 Mysql 数据库失败, error=" + err.Error())
+		log.Println("[ERROR] 连接 Mysql 数据库失败, error=" + err.Error())
 		return
 	}
 
 	// 连接成功
-	fmt.Println("[Success] Mysql数据库连接成功！！！")
+	log.Println("[INFO] Mysql数据库连接成功！！！")
 
 	// 迁移
 	// TODO UnitInfo 迁移有问题
@@ -30,7 +32,7 @@ func InitMysql() {
 	//
 	db, err := conn.DB()
 	if err != nil {
-		fmt.Println("[database Mysql] 获取sql实例失败！")
+		log.Println("[ERROR] 获取sql实例失败！")
 	}
 	db.SetMaxIdleConns(config.Conf.Mysql.MaxConn)
 	db.SetMaxOpenConns(config.Conf.Mysql.MaxOpen)

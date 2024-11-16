@@ -8,13 +8,20 @@ package core
  */
 
 import (
+	"gin-init/config"
+	"gin-init/core/initialize"
 	gRPCServer "gin-init/core/rpc/server"
 	"gin-init/core/server"
-	// "gin-init/job"
 	"gin-init/mq"
 )
 
 func Start() {
+	// 加载配置
+	config.Load()
+
+	// 初始化
+	initialize.Initialize()
+
 	//
 	mq.Start()
 

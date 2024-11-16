@@ -1,10 +1,10 @@
 package database
 
 import (
-	"fmt"
 	"gin-init/config"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"log"
 )
 
 func InitPostgresql() {
@@ -18,7 +18,7 @@ func InitPostgresql() {
 	if err != nil {
 		panic("连接数据库失败, error=" + err.Error())
 	}
-	fmt.Println("[Success]  Postgresql 数据库连接成功！！！")
+	log.Println("[Success]  Postgresql 数据库连接成功！！！")
 
 	// 设置数据库连接池参数
 	sqlDB, _ := conn.DB()
