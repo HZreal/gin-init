@@ -3,14 +3,14 @@ package kafka
 /**
  * @Author elastic·H
  * @Date 2024-08-08
- * @File: init.go
+ * @File: connection.go
  * @Description:
  */
 
 import (
-	"fmt"
+	"log"
 )
 
-func Start() {
-	fmt.Println("start kafka")
+func StartConsumer() {
+	log.Println("start kafka")
 }

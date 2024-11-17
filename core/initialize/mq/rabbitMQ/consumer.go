@@ -1,12 +1,5 @@
 package rabbitMQ
 
-import (
-	"fmt"
-	"gin-init/common/constant"
-	amqp "github.com/rabbitmq/amqp091-go"
-	"log"
-)
-
 /**
  * @Author huang
  * @Date 2024-07-12
@@ -14,13 +7,22 @@ import (
  * @Description:
  */
 
+import (
+	"fmt"
+	"gin-init/common/constant"
+	"gin-init/job/consumers"
+	amqp "github.com/rabbitmq/amqp091-go"
+	"log"
+)
+
+// RabbitMQConsumer 消费者
 type RabbitMQConsumer struct {
 	Conn *amqp.Connection
 }
 
-func NewConsumer(conn *amqp.Connection) *RabbitMQConsumer {
+func NewConsumer() *RabbitMQConsumer {
 	return &RabbitMQConsumer{
-		Conn: conn,
+		Conn: Conn,
 	}
 }
 
@@ -85,4 +87,27 @@ func (c *RabbitMQConsumer) Listen(topic constant.Topic, handler func(body []byte
 
 	log.Printf("Listening for messages on queue: %s", queueName)
 	return nil
+}
+
+// 注册器
+var registers = []struct {
+	topic   constant.Topic
+	handler func(msg []byte)
+}{
+	{topic: constant.DemoTopic, handler: consumers.HandleMessage1},
+	{topic: constant.FirstTopic, handler: consumers.HandleMessage2},
+}
+
+// 启动所有的消费者
+func StartConsumer() {
+	consumer := NewConsumer()
+
+	//
+	for _, register := range registers {
+		// 启动消费者
+		err := consumer.Listen(register.topic, register.handler)
+		if err != nil {
+			log.Fatalf("Failed to start consumer for %v: %v", register.topic, err)
+		}
+	}
 }

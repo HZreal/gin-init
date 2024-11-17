@@ -10,9 +10,10 @@ package core
 import (
 	"gin-init/config"
 	"gin-init/core/initialize"
+	"gin-init/core/initialize/mq/kafka"
+	"gin-init/core/initialize/mq/rabbitMQ"
 	gRPCServer "gin-init/core/rpc/server"
 	"gin-init/core/server"
-	"gin-init/mq"
 )
 
 func Start() {
@@ -22,10 +23,11 @@ func Start() {
 	// 初始化
 	initialize.Initialize()
 
-	//
-	mq.Start()
+	// 启动 mq 消费者
+	rabbitMQ.StartConsumer()
+	kafka.StartConsumer()
 
-	//
+	// 启动定时任务
 	// go job.StartCron()
 
 	//
