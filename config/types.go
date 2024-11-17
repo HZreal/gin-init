@@ -16,6 +16,7 @@ type Config struct {
 	Redis      *RedisConfig      `yaml:"redis"`
 	RabbitMQ   *RabbitMQConfig   `yaml:"rabbitmq"`
 	GRPC       *GRPCConfig       `yaml:"grpc"`
+	Logger     *MyLogger         `yaml:"logger"`
 }
 
 // GinConfig 配置
@@ -27,6 +28,30 @@ type GinConfig struct {
 
 func (g *GinConfig) GetAddr() string {
 	return g.Host + ":" + g.Port
+}
+
+// MyLogger 配置
+type MyLogger struct {
+	Console struct {
+		Enable bool   `yaml:"enable"`
+		Level  string `yaml:"level"`
+	} `yaml:"console"`
+
+	File struct {
+		Enable         bool   `yaml:"enable"`
+		Level          string `yaml:"level"`
+		Path           string `yaml:"path"`
+		MaxSize        int    `yaml:"maxSize"`
+		MaxBackupCount int    `yaml:"maxBackupCount"`
+	} `yaml:"file"`
+
+	External struct {
+		Enable  bool   `yaml:"enable"`
+		Level   string `yaml:"level"`
+		Service string `yaml:"service"`
+		Url     string `yaml:"url"`
+		Index   string `yaml:"index"`
+	} `yaml:"external"`
 }
 
 // MysqlConfig 配置

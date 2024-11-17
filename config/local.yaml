@@ -41,3 +41,20 @@ rabbitmq:
 grpc:
   host: 127.0.0.1
   port: 50051
+
+logger:
+  console:
+    enable: true
+    level: info
+  file:
+    enable: true
+    level: info
+    path: logs/gin_app.log
+    maxSize: 300 # 日志文件大小
+    maxBackupCount: 10 # 日志文件数
+  external:
+    enable: false
+    level: info
+    service: "elk" # 日志外部服务类型：elk, logstash, etc.
+    url: "http://localhost:9200"
+    index: "gin-logs" # ELK索引

@@ -1,4 +1,11 @@
-package server
+package ginServer
+
+/**
+ * @Author elastic·H
+ * @Date 2023-06-11
+ * @File: start.go
+ * @Description:
+ */
 
 import (
 	"fmt"
@@ -7,7 +14,9 @@ import (
 	"gin-init/middleware"
 	"gin-init/routes"
 	"github.com/gin-contrib/cors"
+	ginzap "github.com/gin-contrib/zap"
 	"github.com/gin-gonic/gin"
+	"log"
 	"time"
 )
 
@@ -19,21 +28,27 @@ func StartGinServer() {
 	//
 	gin.SetMode(config.Conf.Gin.Mode)
 
-	//
-	r = gin.Default()
-
-	// 日志
+	// gin.Default() 使用默认的 Logger 和 Recovery
+	// r = gin.Default()
+	// gin 默认日志
 	// r.Use(gin.Logger())
-	// 将 Zap 日志器作为 Gin 的日志中间件
-	// r.Use(ginzap.Ginzap(Logger, time.RFC3339, true))
-	// r.Use(ginzap.RecoveryWithZap(Logger, true))
-
-	// 异常拦截
+	// gin 默认异常处理 Recovery
 	// r.Use(gin.Recovery())
+	r = gin.New()
+
+	// 将 Zap 日志作为 Gin 的日志中间件
+	// 初始化 Logger
+	if err := InitLogger(); err != nil {
+		log.Printf("Failed to initialize logger: %v\n", err)
+		return
+	}
+	r.Use(ginzap.Ginzap(Logger, time.RFC3339, true))
+	r.Use(ginzap.RecoveryWithZap(Logger, true))
+
+	// 异常拦截处理，代替默认的 Recovery
 	r.Use(middleware.ExceptionInterceptorMiddleware())
 
-	// cors
-	// 全局注册 CORS 中间件
+	// 注册 CORS 中间件
 	r.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"*"},                                       // 允许的域名
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE"},            // 允许的HTTP方法
@@ -45,7 +60,6 @@ func StartGinServer() {
 
 	// 创建并配置 Socket.IO 服务器
 	socketIOServer := socketio.CreateSocketIOServer()
-
 	// 将 Socket.IO 服务器集成到 Gin 路由中
 	r.GET("/socket.io/*any", gin.WrapH(socketIOServer))
 	r.POST("/socket.io/*any", gin.WrapH(socketIOServer))
@@ -55,7 +69,6 @@ func StartGinServer() {
 
 	// router 组定义
 	routerGroup = r.Group("api")
-
 	// 注册路由
 	routes.RegisterRoutes(routerGroup)
 

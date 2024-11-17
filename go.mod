@@ -4,6 +4,7 @@ go 1.20
 
 require (
 	github.com/gin-contrib/cors v1.7.2
+	github.com/gin-contrib/zap v1.1.4
 	github.com/gin-gonic/gin v1.10.0
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/golang-jwt/jwt/v5 v5.2.1
@@ -18,6 +19,7 @@ require (
 	golang.org/x/crypto v0.26.0
 	google.golang.org/grpc v1.64.1
 	google.golang.org/protobuf v1.34.2
+	gopkg.in/natefinch/lumberjack.v2 v2.2.1
 	gorm.io/driver/mysql v1.5.7
 	gorm.io/driver/postgres v1.5.9
 	gorm.io/gorm v1.25.10

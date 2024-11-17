@@ -11,10 +11,10 @@ import (
 	"gin-init/config"
 	"gin-init/core/consumer/rabbitMQ"
 
+	"gin-init/core/ginServer"
 	// "gin-init/core/cron"
 	"gin-init/core/initialize"
 	gRPCServer "gin-init/core/rpc/server"
-	"gin-init/core/server"
 )
 
 func Start() {
@@ -35,5 +35,5 @@ func Start() {
 	gRPCServer.StartGPRC()
 
 	//
-	server.StartGinServer()
+	ginServer.StartGinServer()
 }
