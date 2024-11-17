@@ -9,7 +9,7 @@ package common
 
 import (
 	"gin-init/common/constant"
-	"gin-init/core/initialize/mq/rabbitMQ"
+	"gin-init/core/initialize/mq"
 	amqp "github.com/rabbitmq/amqp091-go"
 	"log"
 	"sync"
@@ -24,7 +24,7 @@ type RabbitMQService struct {
 // NewRabbitMQService 初始化 RabbitMQService
 func NewRabbitMQService() *RabbitMQService {
 	var rabbitMQService = &RabbitMQService{
-		conn: rabbitMQ.Conn,
+		conn: mq.Conn,
 	}
 
 	Channel, err := rabbitMQService.conn.Channel()
@@ -49,7 +49,7 @@ func (r *RabbitMQService) connect() error {
 	// 	}
 	// })
 	// return err
-	rabbitMQ.InitRabbitMQ()
+	mq.InitRabbitMQ()
 	return nil
 }
 
@@ -68,8 +68,8 @@ func (r *RabbitMQService) reconnect() {
 
 func (r *RabbitMQService) GetChannel() {
 	if r.conn == nil {
-		rabbitMQ.InitRabbitMQ()
-		r.conn = rabbitMQ.Conn
+		mq.InitRabbitMQ()
+		r.conn = mq.Conn
 	}
 
 	channel, err := r.conn.Channel()

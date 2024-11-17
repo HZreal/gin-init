@@ -10,7 +10,8 @@ package rabbitMQ
 import (
 	"fmt"
 	"gin-init/common/constant"
-	"gin-init/job/consumers"
+	"gin-init/core/initialize/mq"
+	"gin-init/job/consumerHandler"
 	amqp "github.com/rabbitmq/amqp091-go"
 	"log"
 )
@@ -22,7 +23,7 @@ type RabbitMQConsumer struct {
 
 func NewConsumer() *RabbitMQConsumer {
 	return &RabbitMQConsumer{
-		Conn: Conn,
+		Conn: mq.Conn,
 	}
 }
 
@@ -94,8 +95,8 @@ var registers = []struct {
 	topic   constant.Topic
 	handler func(msg []byte)
 }{
-	{topic: constant.DemoTopic, handler: consumers.HandleMessage1},
-	{topic: constant.FirstTopic, handler: consumers.HandleMessage2},
+	{topic: constant.DemoTopic, handler: consumerHandler.HandleMessage1},
+	{topic: constant.FirstTopic, handler: consumerHandler.HandleMessage2},
 }
 
 // 启动所有的消费者
@@ -110,4 +111,6 @@ func StartConsumer() {
 			log.Fatalf("Failed to start consumer for %v: %v", register.topic, err)
 		}
 	}
+
+	log.Println("[INFO] RabbitMQ 消费者成功启动并监听中！！！")
 }

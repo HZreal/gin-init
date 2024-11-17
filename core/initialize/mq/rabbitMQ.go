@@ -1,9 +1,9 @@
-package rabbitMQ
+package mq
 
 /**
  * @Author nico
  * @Date 2024-11-16
- * @File: connection.go
+ * @File: rabbitMQ.go
  * @Description:
  */
 
@@ -21,4 +21,5 @@ func InitRabbitMQ() {
 	if err != nil {
 		log.Fatalf("[ERROR] Failed to connect to RabbitMQ: %v", err)
 	}
+	log.Println("[INFO] RabbitMQ 连接成功！！！")
 }
