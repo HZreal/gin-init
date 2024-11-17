@@ -2,7 +2,9 @@ package service
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
+	"gin-init/common/constant"
 	"gin-init/core/initialize/database"
 	"gin-init/model/dto"
 	"gin-init/model/entity"
@@ -68,20 +70,20 @@ func (uS *UserService) GetUserList(c *gin.Context, query dto.QueryPagination, bo
 
 func (uS *UserService) GetUserDetail(c *gin.Context, id int) (userInfo vo.UserDetailInfo) {
 	//
-	key := fmt.Sprintf("tmp:user:id:%s", id)
+	key := fmt.Sprintf(constant.UserDetail, id)
 	cachedData, err := uS.RedisService.Client.Get(c, key).Result()
-	if err == redis.Nil {
+	if errors.Is(err, redis.Nil) {
 		// 无缓存
 		affected := database.DB.Take(&entity.UserModel{}, id).Scan(&userInfo).RowsAffected
 		if affected == 0 {
-			log.Printf("No user found with ID: %s", id)
+			log.Printf("No user found with ID: %d", id)
 			return
 		}
 
 		// 将查询结果序列化为 JSON 字符串
 		unitInfoJson, err := json.Marshal(userInfo)
 		if err != nil {
-			log.Printf("Failed to serialize data for user ID: %s, error: %v", id, err)
+			log.Printf("Failed to serialize data for user ID: %d, error: %v", id, err)
 			panic("failed to serialize data")
 		}
 
@@ -99,7 +101,7 @@ func (uS *UserService) GetUserDetail(c *gin.Context, id int) (userInfo vo.UserDe
 	} else {
 		// 如果缓存中有数据，返回缓存数据
 		if err := json.Unmarshal([]byte(cachedData), &userInfo); err != nil {
-			log.Printf("Failed to deserialize cache data for user ID: %s, error: %v", id, err)
+			log.Printf("Failed to deserialize cache data for user ID: %d, error: %v", id, err)
 			panic("failed to deserialize cache data")
 		}
 
