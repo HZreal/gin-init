@@ -16,7 +16,7 @@ func InitPostgresql() {
 		DisableForeignKeyConstraintWhenMigrating: true,
 	})
 	if err != nil {
-		panic("连接数据库失败, error=" + err.Error())
+		log.Fatalf("连接数据库失败, error=" + err.Error())
 	}
 	log.Println("[Success]  Postgresql 数据库连接成功！！！")
 

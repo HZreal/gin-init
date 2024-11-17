@@ -3,6 +3,7 @@ package initialize
 import (
 	"gin-init/core/initialize/database"
 	"gin-init/core/initialize/logServer"
+	"gin-init/core/initialize/mq"
 )
 
 func Initialize() {
@@ -11,6 +12,9 @@ func Initialize() {
 
 	//
 	database.InitRedis()
+
+	//
+	mq.InitRabbitMQ()
 
 	//
 	// database.InitPostgresql()

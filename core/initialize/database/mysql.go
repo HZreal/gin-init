@@ -15,7 +15,7 @@ func InitMysql() {
 		SkipDefaultTransaction: true,
 	})
 	if err != nil {
-		log.Println("[ERROR] 连接 Mysql 数据库失败, error=" + err.Error())
+		log.Fatalf("[ERROR] 连接 Mysql 数据库失败, error=" + err.Error())
 		return
 	}
 
@@ -32,7 +32,7 @@ func InitMysql() {
 	//
 	db, err := conn.DB()
 	if err != nil {
-		log.Println("[ERROR] 获取sql实例失败！")
+		log.Fatalln("[ERROR] 获取sql实例失败！")
 	}
 	db.SetMaxIdleConns(config.Conf.Mysql.MaxConn)
 	db.SetMaxOpenConns(config.Conf.Mysql.MaxOpen)

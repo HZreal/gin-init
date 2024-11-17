@@ -8,10 +8,9 @@ package common
  */
 
 import (
-	"fmt"
 	"gin-init/common/constant"
-	"gin-init/config"
-	"github.com/streadway/amqp"
+	"gin-init/core/initialize/mq"
+	amqp "github.com/rabbitmq/amqp091-go"
 	"log"
 	"sync"
 )
@@ -20,34 +19,40 @@ type RabbitMQService struct {
 	conn    *amqp.Connection
 	channel *amqp.Channel
 	once    sync.Once
-	url     string
 }
 
 // NewRabbitMQService 初始化 RabbitMQService
 func NewRabbitMQService() *RabbitMQService {
-	url := config.Conf.RabbitMQ.GetUrl()
-	return &RabbitMQService{
-		url: url,
+	var rabbitMQService = &RabbitMQService{
+		conn: mq.Conn,
 	}
+
+	Channel, err := rabbitMQService.conn.Channel()
+	if err != nil {
+		log.Printf("[ERROR] Failed to open a channel: %v", err)
+	}
+	rabbitMQService.channel = Channel
+
+	return rabbitMQService
 }
 
-// connect 建立与 RabbitMQ 的连接
 func (r *RabbitMQService) connect() error {
-	var err error
-	r.once.Do(func() {
-		r.conn, err = amqp.Dial(r.url)
-		if err != nil {
-			log.Fatalf("Failed to connect to RabbitMQ: %v", err)
-		}
-		r.channel, err = r.conn.Channel()
-		if err != nil {
-			log.Fatalf("Failed to open a channel: %v", err)
-		}
-	})
-	return err
+	// var err error
+	// r.once.Do(func() {
+	// 	r.conn, err = amqp.Dial(r.url)
+	// 	if err != nil {
+	// 		log.Fatalf("Failed to connect to RabbitMQ: %v", err)
+	// 	}
+	// 	r.channel, err = r.conn.Channel()
+	// 	if err != nil {
+	// 		log.Fatalf("Failed to open a channel: %v", err)
+	// 	}
+	// })
+	// return err
+	mq.InitRabbitMQ()
+	return nil
 }
 
-// reconnect 用于重连 RabbitMQ
 func (r *RabbitMQService) reconnect() {
 	r.once = sync.Once{} // 重新设置 once 以便重新连接
 	if r.channel != nil {
@@ -61,13 +66,24 @@ func (r *RabbitMQService) reconnect() {
 	}
 }
 
+func (r *RabbitMQService) GetChannel() {
+	if r.conn == nil {
+		mq.InitRabbitMQ()
+		r.conn = mq.Conn
+	}
+
+	channel, err := r.conn.Channel()
+	if err != nil {
+		log.Printf("Failed to open a channel: %v", err)
+	}
+	r.channel = channel
+}
+
 func (r *RabbitMQService) Publish(exchange, routingKey string, body []byte) error {
-	// 确保连接已建立
-	if r.conn == nil || r.channel == nil {
-		// TODO 获取连接对象去全局单例里获取
-		if err := r.connect(); err != nil {
-			return fmt.Errorf("failed to connect to RabbitMQ: %v", err)
-		}
+	// 获取复用 channel，若没有新建
+	// 生产者发送消息可以复用 channel
+	if r.channel == nil {
+		r.GetChannel()
 	}
 
 	// 声明交换机，指定 direct 模式
@@ -81,7 +97,8 @@ func (r *RabbitMQService) Publish(exchange, routingKey string, body []byte) erro
 		nil,      // arguments
 	)
 	if err != nil {
-		return fmt.Errorf("failed to declare exchange: %v", err)
+		log.Printf("failed to declare exchange: %v", err)
+		return err
 	}
 
 	// 发布消息
@@ -99,7 +116,6 @@ func (r *RabbitMQService) Publish(exchange, routingKey string, body []byte) erro
 	)
 	if err != nil {
 		log.Printf("Failed to publish a message: %v", err)
-		r.reconnect() // 连接失败时尝试重连
 		return err
 	}
 
