@@ -9,6 +9,7 @@ package core
 
 import (
 	"gin-init/config"
+	// "gin-init/core/cron"
 	"gin-init/core/initialize"
 	"gin-init/core/initialize/mq/kafka"
 	"gin-init/core/initialize/mq/rabbitMQ"
@@ -28,7 +29,7 @@ func Start() {
 	kafka.StartConsumer()
 
 	// 启动定时任务
-	// go job.StartCron()
+	// go cron.StartCron()
 
 	//
 	gRPCServer.StartGPRC()

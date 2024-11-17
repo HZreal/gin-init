@@ -1,14 +1,15 @@
-package job
+package cron
 
 /**
  * @Author elastic·H
  * @Date 2024-08-08
- * @File: init.go
+ * @File: startCron.go
  * @Description:
  */
 
 import (
 	"fmt"
+	"gin-init/job/schedule"
 	"github.com/robfig/cron/v3"
 )
 
@@ -17,7 +18,7 @@ func StartCron() {
 	c := cron.New()
 
 	// 添加一个定时任务 (每 3 s运行一次)
-	_, err := c.AddFunc("@every 3s", checkDevice)
+	_, err := c.AddFunc("@every 3s", schedule.CheckDevice)
 	if err != nil {
 		fmt.Println("添加定时任务失败:", err)
 		return
