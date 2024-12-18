@@ -36,18 +36,21 @@ func NewBaseController[T any]() *BaseController[T] {
 
 // Create - 通用的创建操作
 func (c *BaseController[T]) Create(ctx *gin.Context) {
+	// 注意这里定义的是 T 而不是 *T，否则 ShouldBindJSON 会出错
 	var item T
 	if err := ctx.ShouldBindJSON(&item); err != nil {
 		log.Println("Bind error:", err)
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid data"})
+		response.Failed(ctx, response.ParamsError)
 		return
 	}
+
 	if err := c.service.Create(&item); err != nil {
 		log.Println("Create error:", err)
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create"})
 		return
 	}
-	ctx.JSON(http.StatusOK, gin.H{"message": "Created successfully", "data": item})
+
+	response.SuccessWithoutData(ctx)
 }
 
 // GetByID - 通用的获取单个记录
@@ -59,7 +62,7 @@ func (c *BaseController[T]) GetByID(ctx *gin.Context) {
 		return
 	}
 
-	item, err := c.service.GetByID(uint(body.Id))
+	item, err := c.service.GetByID(body.Id)
 	if err != nil {
 		log.Println("Get error:", err)
 		ctx.JSON(http.StatusNotFound, gin.H{"error": "Item not found"})

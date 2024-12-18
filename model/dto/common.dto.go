@@ -15,5 +15,5 @@ type BodyJsonId struct {
 }
 
 type QueryId struct {
-	Id int `form:"id" binding:"required,min=1"`
+	Id uint `form:"id" binding:"required,min=1"`
 }

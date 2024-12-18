@@ -17,7 +17,7 @@ func (d *UserRouter) RegisterRoutes(r *gin.RouterGroup) {
 		userGroup.GET("info/detail", middleware.RateLimitMiddleware(5, time.Minute), AppController.UserController.GetUserDetail)
 		// userGroup.POST("info/list", middleware.JWTMiddleware(), userController.GetUserList)
 		userGroup.POST("info/list", middleware.JWTMiddleware(), AppController.UserController.GetUserList)
-		// userGroup.POST("info/create", userController.CreateUser)
+		userGroup.POST("info/create/2", controller.NewUserController2().Create)
 		userGroup.POST("info/create", AppController.UserController.CreateUser)
 		userGroup.POST("info/update", AppController.UserController.UpdateUser)
 		userGroup.POST("info/update/passwd", AppController.UserController.UpdateUserPassword)

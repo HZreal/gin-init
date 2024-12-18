@@ -31,6 +31,28 @@ func (c *UserController2) ChangePassword(ctx *gin.Context) {
 
 }
 
+// 重写 Create
+// func (c *UserController2) Create(ctx *gin.Context) {
+// 	var body dto.UserCreateDTO
+//
+// 	if err := ctx.ShouldBindJSON(&body); err != nil {
+// 		response.Failed(ctx, response.ParamsError)
+// 		return
+// 	}
+//
+// 	user := &entity.TbUser{
+// 		Username: body.Username,
+// 		Password: body.Password,
+// 		Phone:    body.Phone,
+// 		Age:      body.Age,
+// 	}
+//
+// 	//
+// 	_ = c.UserService.Create(ctx, user)
+//
+// 	response.SuccessWithData(ctx, user)
+// }
+
 type UserController struct {
 	//
 	UserService *service.UserService

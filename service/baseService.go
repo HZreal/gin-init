@@ -20,31 +20,31 @@ type BaseServiceInterface[T any] interface {
 }
 
 type BaseService[T any] struct {
-	repository model.BaseModelInterface[T]
+	baseModel model.BaseModelInterface[T]
 }
 
 func NewBaseService[T any]() *BaseService[T] {
 	return &BaseService[T]{
-		repository: model.NewBaseModel[T](),
+		baseModel: model.NewBaseModel[T](),
 	}
 }
 
 func (s *BaseService[T]) Create(item *T) error {
-	return s.repository.Create(item)
+	return s.baseModel.Create(item)
 }
 
 func (s *BaseService[T]) GetByID(id uint) (*T, error) {
-	return s.repository.FindByID(id)
+	return s.baseModel.FindByID(id)
 }
 
 func (s *BaseService[T]) GetAll() ([]T, error) {
-	return s.repository.FindAll()
+	return s.baseModel.FindAll()
 }
 
 func (s *BaseService[T]) Update(item *T) error {
-	return s.repository.Update(item)
+	return s.baseModel.Update(item)
 }
 
 func (s *BaseService[T]) Delete(id uint) error {
-	return s.repository.Delete(id)
+	return s.baseModel.Delete(id)
 }

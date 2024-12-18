@@ -31,7 +31,11 @@ func NewBaseModel[T any]() *BaseModel[T] {
 }
 
 func (r *BaseModel[T]) Create(item *T) error {
-	return r.db.Create(item).Error
+	result := r.db.Create(item)
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
 }
 
 func (r *BaseModel[T]) FindByID(id uint) (*T, error) {

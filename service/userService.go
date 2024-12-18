@@ -102,7 +102,7 @@ func (uS *UserService) GetUserList(c *gin.Context, query dto.QueryPagination, bo
 	}
 }
 
-func (uS *UserService) GetUserDetail(c *gin.Context, id int) (userInfo vo.UserDetailInfo) {
+func (uS *UserService) GetUserDetail(c *gin.Context, id uint) (userInfo vo.UserDetailInfo) {
 	//
 	key := fmt.Sprintf(constant.UserDetail, id)
 	cachedData, err := uS.RedisService.Client.Get(c, key).Result()
