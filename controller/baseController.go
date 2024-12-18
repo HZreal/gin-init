@@ -58,6 +58,7 @@ func (c *BaseController[T]) GetByID(ctx *gin.Context) {
 	var body dto.QueryId
 
 	if err := ctx.ShouldBindQuery(&body); err != nil {
+		log.Println("Bind error:", err)
 		response.Failed(ctx, response.ParamsError)
 		return
 	}
@@ -68,7 +69,8 @@ func (c *BaseController[T]) GetByID(ctx *gin.Context) {
 		ctx.JSON(http.StatusNotFound, gin.H{"error": "Item not found"})
 		return
 	}
-	ctx.JSON(http.StatusOK, item)
+
+	response.SuccessWithData(ctx, item)
 }
 
 // GetAll - 通用的获取所有记录
