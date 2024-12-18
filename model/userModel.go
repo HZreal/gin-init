@@ -14,24 +14,24 @@ import (
 var _ UserRepoInterface = (*UserRepository)(nil)
 
 type UserRepoInterface interface {
-	BaseRepoInterface[entity.UserModel]
-	FindByEmail(email string) (*entity.UserModel, error)
+	BaseRepoInterface[entity.TbUser]
+	FindByEmail(email string) (*entity.TbUser, error)
 }
 
 type UserRepository struct {
 	table string
-	*BaseRepository[entity.UserModel]
+	*BaseRepository[entity.TbUser]
 }
 
 func NewUserRepository() *UserRepository {
 	return &UserRepository{
 		table:          "tb_user",
-		BaseRepository: NewBaseRepository[entity.UserModel](),
+		BaseRepository: NewBaseRepository[entity.TbUser](),
 	}
 }
 
-func (r *UserRepository) FindByEmail(email string) (*entity.UserModel, error) {
-	var user entity.UserModel
+func (r *UserRepository) FindByEmail(email string) (*entity.TbUser, error) {
+	var user entity.TbUser
 	if err := r.db.Find(user, email).Error; err != nil {
 		return nil, err
 	}

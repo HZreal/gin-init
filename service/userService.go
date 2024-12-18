@@ -20,12 +20,12 @@ import (
 var _ UserServiceInterface = (*UserService2)(nil)
 
 type UserServiceInterface interface {
-	BaseServiceInterface[entity.UserModel]
+	BaseServiceInterface[entity.TbUser]
 	ChangePassword(id uint, oldPassword, newPassword string) error
 }
 
 type UserService2 struct {
-	*BaseService[entity.UserModel]
+	*BaseService[entity.TbUser]
 	UserRepo     model.UserRepoInterface
 	RedisService *common.RedisService
 }
@@ -34,7 +34,7 @@ func NewUserService2() UserServiceInterface {
 	return &UserService2{
 		RedisService: common.NewRedisService(),
 		UserRepo:     model.NewUserRepository(),
-		BaseService:  NewBaseService[entity.UserModel](),
+		BaseService:  NewBaseService[entity.TbUser](),
 	}
 }
 
@@ -51,11 +51,11 @@ func (s *UserService2) ChangePassword(id uint, oldPassword, newPassword string) 
 }
 
 type UserService struct {
-	UserModel    *entity.UserModel
+	UserModel    *entity.TbUser
 	RedisService *common.RedisService
 }
 
-func NewUserService(userModel *entity.UserModel, redisService *common.RedisService) *UserService {
+func NewUserService(userModel *entity.TbUser, redisService *common.RedisService) *UserService {
 	return &UserService{
 		UserModel:    userModel,
 		RedisService: redisService,
@@ -82,7 +82,7 @@ func (uS *UserService) GetUserList(c *gin.Context, query dto.QueryPagination, bo
 	offset := (page - 1) * pageSize
 
 	// 获取数据总数和分页数据
-	// db.Model(&entity.UserModel{}).Where(body).Count(&total).Offset(offset).Limit(pageSize).Find(&userInfos)
+	// db.Model(&entity.TbUser{}).Where(body).Count(&total).Offset(offset).Limit(pageSize).Find(&userInfos)
 	// TODO 通过依赖注入
 	database.DB.Model(uS.UserModel).Where(body).Count(&total).Offset(offset).Limit(pageSize).Find(&userInfos)
 
@@ -108,7 +108,7 @@ func (uS *UserService) GetUserDetail(c *gin.Context, id int) (userInfo vo.UserDe
 	cachedData, err := uS.RedisService.Client.Get(c, key).Result()
 	if errors.Is(err, redis.Nil) {
 		// 无缓存
-		affected := database.DB.Take(&entity.UserModel{}, id).Scan(&userInfo).RowsAffected
+		affected := database.DB.Take(&entity.TbUser{}, id).Scan(&userInfo).RowsAffected
 		if affected == 0 {
 			log.Printf("No user found with ID: %d", id)
 			return
@@ -156,7 +156,7 @@ func (uS *UserService) CheckUser(loginData dto.LoginData) bool {
 }
 
 func (uS *UserService) CreateUser(c *gin.Context, body dto.UserCreateDTO) vo.UserDetailInfo {
-	user := entity.UserModel{
+	user := entity.TbUser{
 		Username: body.Username,
 		Password: body.Password,
 		Phone:    body.Phone,
@@ -178,7 +178,7 @@ func (uS *UserService) CreateUser(c *gin.Context, body dto.UserCreateDTO) vo.Use
 
 func (uS *UserService) UpdateUser(c *gin.Context, body dto.UserUpdateDTO) vo.UserDetailInfo {
 	id := body.Id
-	var user entity.UserModel
+	var user entity.TbUser
 	if result := database.DB.First(&user, id); result.Error != nil {
 		log.Printf("Failed to find user, error: %v", result.Error)
 		panic("failed to find user")

@@ -11,18 +11,18 @@ import (
 var _ UserControllerInterface = (*UserController2)(nil)
 
 type UserControllerInterface interface {
-	BaseControllerInterface[entity.UserModel]
+	BaseControllerInterface[entity.TbUser]
 	ChangePassword(c *gin.Context)
 }
 
 type UserController2 struct {
-	*BaseController[entity.UserModel]
+	*BaseController[entity.TbUser]
 	UserService service.UserServiceInterface
 }
 
 func NewUserController2() UserControllerInterface {
 	return &UserController2{
-		BaseController: NewBaseController[entity.UserModel](),
+		BaseController: NewBaseController[entity.TbUser](),
 		UserService:    service.NewUserService2(),
 	}
 }

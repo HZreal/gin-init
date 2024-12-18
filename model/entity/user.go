@@ -1,6 +1,6 @@
 package entity
 
-type UserModel struct {
+type TbUser struct {
 	Id       int                    `gorm:"column:id;primary_key;AUTO_INCREMENT;NOT NULL"`
 	Username string                 `gorm:"column:username"`
 	Password string                 `gorm:"column:password"`
@@ -10,10 +10,10 @@ type UserModel struct {
 	Extra    map[string]interface{} `gorm:"column:extra;serializer:json"`
 }
 
-func NewUserModel() *UserModel {
-	return &UserModel{}
+func NewUserModel() *TbUser {
+	return &TbUser{}
 }
 
-func (t *UserModel) TableName() string {
+func (t *TbUser) TableName() string {
 	return "tb_user"
 }
