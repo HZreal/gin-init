@@ -26,20 +26,20 @@ type UserServiceInterface interface {
 
 type UserService2 struct {
 	*BaseService[entity.TbUser]
-	UserRepo     model.UserRepoInterface
+	TbUserModel  model.TbUserModelInterface
 	RedisService *common.RedisService
 }
 
 func NewUserService2() UserServiceInterface {
 	return &UserService2{
 		RedisService: common.NewRedisService(),
-		UserRepo:     model.NewUserRepository(),
+		TbUserModel:  model.NewTbUserModel(),
 		BaseService:  NewBaseService[entity.TbUser](),
 	}
 }
 
 func (s *UserService2) ChangePassword(id uint, oldPassword, newPassword string) error {
-	user, err := s.UserRepo.FindByID(id)
+	user, err := s.TbUserModel.FindByID(id)
 	if err != nil {
 		return err
 	}
@@ -47,7 +47,7 @@ func (s *UserService2) ChangePassword(id uint, oldPassword, newPassword string) 
 		return errors.New("old password is incorrect")
 	}
 	user.Password = newPassword
-	return s.UserRepo.Update(user)
+	return s.TbUserModel.Update(user)
 }
 
 type UserService struct {

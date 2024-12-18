@@ -11,26 +11,26 @@ import (
 	"gin-init/model/entity"
 )
 
-var _ UserRepoInterface = (*UserRepository)(nil)
+var _ TbUserModelInterface = (*TbUserModel)(nil)
 
-type UserRepoInterface interface {
-	BaseRepoInterface[entity.TbUser]
+type TbUserModelInterface interface {
+	BaseModelInterface[entity.TbUser]
 	FindByEmail(email string) (*entity.TbUser, error)
 }
 
-type UserRepository struct {
+type TbUserModel struct {
 	table string
-	*BaseRepository[entity.TbUser]
+	*BaseModel[entity.TbUser]
 }
 
-func NewUserRepository() *UserRepository {
-	return &UserRepository{
-		table:          "tb_user",
-		BaseRepository: NewBaseRepository[entity.TbUser](),
+func NewTbUserModel() *TbUserModel {
+	return &TbUserModel{
+		table:     "tb_user",
+		BaseModel: NewBaseModel[entity.TbUser](),
 	}
 }
 
-func (r *UserRepository) FindByEmail(email string) (*entity.TbUser, error) {
+func (r *TbUserModel) FindByEmail(email string) (*entity.TbUser, error) {
 	var user entity.TbUser
 	if err := r.db.Find(user, email).Error; err != nil {
 		return nil, err

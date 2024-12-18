@@ -20,12 +20,12 @@ type BaseServiceInterface[T any] interface {
 }
 
 type BaseService[T any] struct {
-	repository model.BaseRepoInterface[T]
+	repository model.BaseModelInterface[T]
 }
 
 func NewBaseService[T any]() *BaseService[T] {
 	return &BaseService[T]{
-		repository: model.NewBaseRepository[T](),
+		repository: model.NewBaseModel[T](),
 	}
 }
 

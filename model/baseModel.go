@@ -12,7 +12,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type BaseRepoInterface[T any] interface {
+type BaseModelInterface[T any] interface {
 	Create(item *T) error
 	FindByID(id uint) (*T, error)
 	FindAll() ([]T, error)
@@ -20,21 +20,21 @@ type BaseRepoInterface[T any] interface {
 	Delete(id uint) error
 }
 
-type BaseRepository[T any] struct {
+type BaseModel[T any] struct {
 	db *gorm.DB
 }
 
-func NewBaseRepository[T any]() *BaseRepository[T] {
-	return &BaseRepository[T]{
+func NewBaseModel[T any]() *BaseModel[T] {
+	return &BaseModel[T]{
 		db: database.DB,
 	}
 }
 
-func (r *BaseRepository[T]) Create(item *T) error {
+func (r *BaseModel[T]) Create(item *T) error {
 	return r.db.Create(item).Error
 }
 
-func (r *BaseRepository[T]) FindByID(id uint) (*T, error) {
+func (r *BaseModel[T]) FindByID(id uint) (*T, error) {
 	var item T
 	if err := r.db.First(&item, id).Error; err != nil {
 		return nil, err
@@ -42,7 +42,7 @@ func (r *BaseRepository[T]) FindByID(id uint) (*T, error) {
 	return &item, nil
 }
 
-func (r *BaseRepository[T]) FindAll() ([]T, error) {
+func (r *BaseModel[T]) FindAll() ([]T, error) {
 	var items []T
 	if err := r.db.Find(&items).Error; err != nil {
 		return nil, err
@@ -50,11 +50,11 @@ func (r *BaseRepository[T]) FindAll() ([]T, error) {
 	return items, nil
 }
 
-func (r *BaseRepository[T]) Update(item *T) error {
+func (r *BaseModel[T]) Update(item *T) error {
 	return r.db.Save(item).Error
 }
 
-func (r *BaseRepository[T]) Delete(id uint) error {
+func (r *BaseModel[T]) Delete(id uint) error {
 	var item T
 	return r.db.Delete(item, id).Error
 }
