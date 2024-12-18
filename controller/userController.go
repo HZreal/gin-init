@@ -3,9 +3,33 @@ package controller
 import (
 	"gin-init/common/response"
 	"gin-init/model/dto"
+	"gin-init/model/entity"
 	"gin-init/service"
 	"github.com/gin-gonic/gin"
 )
+
+var _ UserControllerInterface = (*UserController2)(nil)
+
+type UserControllerInterface interface {
+	BaseControllerInterface[entity.UserModel]
+	ChangePassword(c *gin.Context)
+}
+
+type UserController2 struct {
+	*BaseController[entity.UserModel]
+	UserService service.UserServiceInterface
+}
+
+func NewUserController2() UserControllerInterface {
+	return &UserController2{
+		BaseController: NewBaseController[entity.UserModel](),
+		UserService:    service.NewUserService2(),
+	}
+}
+
+func (c *UserController2) ChangePassword(ctx *gin.Context) {
+
+}
 
 type UserController struct {
 	//

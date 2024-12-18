@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"gin-init/common/constant"
 	"gin-init/core/initialize/database"
+	"gin-init/model"
 	"gin-init/model/dto"
 	"gin-init/model/entity"
 	"gin-init/model/vo"
@@ -15,6 +16,39 @@ import (
 	"log"
 	"time"
 )
+
+var _ UserServiceInterface = (*UserService2)(nil)
+
+type UserServiceInterface interface {
+	BaseServiceInterface[entity.UserModel]
+	ChangePassword(id uint, oldPassword, newPassword string) error
+}
+
+type UserService2 struct {
+	*BaseService[entity.UserModel]
+	UserRepo     model.UserRepoInterface
+	RedisService *common.RedisService
+}
+
+func NewUserService2() UserServiceInterface {
+	return &UserService2{
+		RedisService: common.NewRedisService(),
+		UserRepo:     model.NewUserRepository(),
+		BaseService:  NewBaseService[entity.UserModel](),
+	}
+}
+
+func (s *UserService2) ChangePassword(id uint, oldPassword, newPassword string) error {
+	user, err := s.UserRepo.FindByID(id)
+	if err != nil {
+		return err
+	}
+	if user.Password != oldPassword {
+		return errors.New("old password is incorrect")
+	}
+	user.Password = newPassword
+	return s.UserRepo.Update(user)
+}
 
 type UserService struct {
 	UserModel    *entity.UserModel
