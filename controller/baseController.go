@@ -9,7 +9,7 @@ package controller
 
 import (
 	"gin-init/common/response"
-	"gin-init/model/dto"
+	"gin-init/model/types"
 	"gin-init/service"
 	"github.com/gin-gonic/gin"
 	"log"
@@ -55,7 +55,7 @@ func (c *BaseController[T]) Create(ctx *gin.Context) {
 
 // GetByID - 通用的获取单个记录
 func (c *BaseController[T]) GetByID(ctx *gin.Context) {
-	var body dto.QueryId
+	var body types.QueryId
 
 	if err := ctx.ShouldBindQuery(&body); err != nil {
 		log.Println("Bind error:", err)
@@ -102,7 +102,7 @@ func (c *BaseController[T]) Update(ctx *gin.Context) {
 
 // Delete - 通用的删除操作
 func (c *BaseController[T]) Delete(ctx *gin.Context) {
-	var body dto.BodyJsonId
+	var body types.BodyJsonId
 
 	if err := ctx.ShouldBindJSON(&body); err != nil {
 		response.Failed(ctx, response.ParamsError)

@@ -3,8 +3,7 @@ package service
 import (
 	"errors"
 	"gin-init/middleware"
-	"gin-init/model/dto"
-	"gin-init/model/vo"
+	"gin-init/model/types"
 	"github.com/gin-gonic/gin"
 )
 
@@ -16,7 +15,7 @@ func NewSysService(userService *UserService) *SysService {
 	return &SysService{UserService: userService}
 }
 
-func (uS *SysService) Login(c *gin.Context, loginData dto.LoginData) (result vo.SysLoginVo, err error) {
+func (uS *SysService) Login(c *gin.Context, loginData types.LoginData) (result types.SysLoginVo, err error) {
 
 	// 校验用户名密码
 	// if !(loginData.Username == "admin" && loginData.Password == "root123456") {
@@ -33,7 +32,7 @@ func (uS *SysService) Login(c *gin.Context, loginData dto.LoginData) (result vo.
 		return result, errors.New("failed to generate token")
 	}
 
-	result = vo.SysLoginVo{Token: token}
+	result = types.SysLoginVo{Token: token}
 	return result, nil
 }
 

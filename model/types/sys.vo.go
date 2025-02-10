@@ -1,4 +1,4 @@
-package vo
+package types
 
 /**
  * @Author elastic·H

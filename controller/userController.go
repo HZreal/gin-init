@@ -2,8 +2,8 @@ package controller
 
 import (
 	"gin-init/common/response"
-	"gin-init/model/dto"
 	"gin-init/model/entity"
+	"gin-init/model/types"
 	"gin-init/service"
 	"github.com/gin-gonic/gin"
 )
@@ -33,7 +33,7 @@ func (c *UserController2) ChangePassword(ctx *gin.Context) {
 
 // 重写 Create
 func (c *UserController2) Create(ctx *gin.Context) {
-	var body dto.UserCreateDTO
+	var body types.UserCreateDTO
 
 	if err := ctx.ShouldBindJSON(&body); err != nil {
 		response.Failed(ctx, response.ParamsError)
@@ -67,7 +67,7 @@ func NewUserController(userService *service.UserService) *UserController {
 
 func (uC *UserController) GetAllUser(c *gin.Context) {
 	//
-	var body dto.UsersFilterDTO
+	var body types.UsersFilterDTO
 
 	if err := c.ShouldBindJSON(&body); err != nil {
 		response.Failed(c, response.ParamsError)
@@ -83,7 +83,7 @@ func (uC *UserController) GetAllUser(c *gin.Context) {
 
 func (uC *UserController) GetUserList(c *gin.Context) {
 
-	var query dto.QueryPagination
+	var query types.QueryPagination
 	if err := c.ShouldBindQuery(&query); err != nil {
 		response.Failed(c, response.ParamsError)
 		return
@@ -104,7 +104,7 @@ func (uC *UserController) GetUserList(c *gin.Context) {
 
 func (uC *UserController) GetUserDetail(c *gin.Context) {
 	//
-	var body dto.QueryId
+	var body types.QueryId
 
 	if err := c.ShouldBindQuery(&body); err != nil {
 		response.Failed(c, response.ParamsError)
@@ -119,7 +119,7 @@ func (uC *UserController) GetUserDetail(c *gin.Context) {
 }
 
 func (uC *UserController) CreateUser(c *gin.Context) {
-	var body dto.UserCreateDTO
+	var body types.UserCreateDTO
 
 	if err := c.ShouldBindJSON(&body); err != nil {
 		response.Failed(c, response.ParamsError)
@@ -133,7 +133,7 @@ func (uC *UserController) CreateUser(c *gin.Context) {
 }
 
 func (uC *UserController) UpdateUser(c *gin.Context) {
-	var body dto.UserUpdateDTO
+	var body types.UserUpdateDTO
 
 	if err := c.ShouldBindJSON(&body); err != nil {
 		response.Failed(c, response.ParamsError)
@@ -148,7 +148,7 @@ func (uC *UserController) UpdateUser(c *gin.Context) {
 }
 
 func (uC *UserController) DeleteUser(c *gin.Context) {
-	var body dto.BodyJsonId
+	var body types.BodyJsonId
 
 	if err := c.ShouldBindJSON(&body); err != nil {
 		response.Failed(c, response.ParamsError)

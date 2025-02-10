@@ -7,9 +7,8 @@ import (
 	"gin-init/common/constant"
 	"gin-init/core/initialize/database"
 	"gin-init/model"
-	"gin-init/model/dto"
 	"gin-init/model/entity"
-	"gin-init/model/vo"
+	"gin-init/model/types"
 	"gin-init/service/common"
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis/v8"
@@ -62,8 +61,8 @@ func NewUserService(userModel *entity.TbUser, redisService *common.RedisService)
 	}
 }
 
-func (uS *UserService) GetAllUser(c *gin.Context, body dto.UsersFilterDTO) []vo.UserDetailInfo {
-	var users []vo.UserDetailInfo
+func (uS *UserService) GetAllUser(c *gin.Context, body types.UsersFilterDTO) []types.UserDetailInfo {
+	var users []types.UserDetailInfo
 	if err := database.DB.Model(uS.UserModel).Where(body).Find(&users).Error; err != nil {
 		log.Printf("query users err:%v", err)
 		panic(err)
@@ -71,10 +70,10 @@ func (uS *UserService) GetAllUser(c *gin.Context, body dto.UsersFilterDTO) []vo.
 	return users
 }
 
-func (uS *UserService) GetUserList(c *gin.Context, query dto.QueryPagination, body map[string]interface{}) (result *vo.PaginationResult) {
+func (uS *UserService) GetUserList(c *gin.Context, query types.QueryPagination, body map[string]interface{}) (result *types.PaginationResult) {
 	//
 
-	var userInfos []vo.UserDetailInfo
+	var userInfos []types.UserDetailInfo
 	var total int64
 	page, pageSize := query.Page, query.PageSize
 
@@ -93,7 +92,7 @@ func (uS *UserService) GetUserList(c *gin.Context, query dto.QueryPagination, bo
 	}
 
 	//
-	return &vo.PaginationResult{
+	return &types.PaginationResult{
 		Total:       int(total),
 		Pages:       pages,
 		CurrentPage: page,
@@ -102,7 +101,7 @@ func (uS *UserService) GetUserList(c *gin.Context, query dto.QueryPagination, bo
 	}
 }
 
-func (uS *UserService) GetUserDetail(c *gin.Context, id uint) (userInfo vo.UserDetailInfo) {
+func (uS *UserService) GetUserDetail(c *gin.Context, id uint) (userInfo types.UserDetailInfo) {
 	//
 	key := fmt.Sprintf(constant.UserDetail, id)
 	cachedData, err := uS.RedisService.Client.Get(c, key).Result()
@@ -144,7 +143,7 @@ func (uS *UserService) GetUserDetail(c *gin.Context, id uint) (userInfo vo.UserD
 
 }
 
-func (uS *UserService) CheckUser(loginData dto.LoginData) bool {
+func (uS *UserService) CheckUser(loginData types.LoginData) bool {
 	//
 	username, password := loginData.Username, loginData.Password
 
@@ -155,7 +154,7 @@ func (uS *UserService) CheckUser(loginData dto.LoginData) bool {
 	return true
 }
 
-func (uS *UserService) CreateUser(c *gin.Context, body dto.UserCreateDTO) vo.UserDetailInfo {
+func (uS *UserService) CreateUser(c *gin.Context, body types.UserCreateDTO) types.UserDetailInfo {
 	user := entity.TbUser{
 		Username: body.Username,
 		Password: body.Password,
@@ -167,7 +166,7 @@ func (uS *UserService) CreateUser(c *gin.Context, body dto.UserCreateDTO) vo.Use
 		log.Printf("Failed to create user, error: %v", result.Error)
 		panic("failed to create user")
 	}
-	return vo.UserDetailInfo{
+	return types.UserDetailInfo{
 		Id:       user.Id,
 		Username: user.Username,
 		Phone:    user.Phone,
@@ -176,7 +175,7 @@ func (uS *UserService) CreateUser(c *gin.Context, body dto.UserCreateDTO) vo.Use
 
 }
 
-func (uS *UserService) UpdateUser(c *gin.Context, body dto.UserUpdateDTO) vo.UserDetailInfo {
+func (uS *UserService) UpdateUser(c *gin.Context, body types.UserUpdateDTO) types.UserDetailInfo {
 	id := body.Id
 	var user entity.TbUser
 	if result := database.DB.First(&user, id); result.Error != nil {
@@ -190,7 +189,7 @@ func (uS *UserService) UpdateUser(c *gin.Context, body dto.UserUpdateDTO) vo.Use
 		log.Printf("Failed to update user, error: %v", result.Error)
 		panic("failed to update user")
 	}
-	return vo.UserDetailInfo{
+	return types.UserDetailInfo{
 		Id:       user.Id,
 		Username: user.Username,
 		Phone:    user.Phone,

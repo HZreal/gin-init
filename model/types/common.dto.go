@@ -1,4 +1,4 @@
-package dto
+package types
 
 type QueryPagination struct {
 	Page     int `form:"page" binding:"required,min=1"`

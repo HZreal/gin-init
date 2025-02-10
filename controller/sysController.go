@@ -2,7 +2,7 @@ package controller
 
 import (
 	"gin-init/common/response"
-	"gin-init/model/dto"
+	"gin-init/model/types"
 	"gin-init/service"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -19,7 +19,7 @@ func NewSysController(sysService *service.SysService) *SysController {
 
 func (uC *SysController) Login(c *gin.Context) {
 	//
-	var loginData dto.LoginData
+	var loginData types.LoginData
 	if err := c.ShouldBindJSON(&loginData); err != nil {
 		response.Failed(c, response.ParamsError)
 		return

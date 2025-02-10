@@ -1,4 +1,4 @@
-package vo
+package types
 
 type PaginationResult struct {
 	Total       int         `json:"total"`

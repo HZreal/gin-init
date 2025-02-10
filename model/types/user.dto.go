@@ -1,4 +1,4 @@
-package dto
+package types
 
 type UserCreateDTO struct {
 	Username string `json:"username" binding:"required,min=5,max=20,alphanum"`
