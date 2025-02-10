@@ -25,3 +25,9 @@ type UserListFilterDTO struct {
 	Phone    string `json:"phone"`
 	Age      int    `json:"age"`
 }
+
+type UserListReq struct {
+	Pagination PaginationType    `json:"pagination"`      // 分页字段
+	Sorter     []SorterItem      `json:"sorter,optional"` // 排序字段
+	Filter     UserListFilterDTO `json:"filter,optional"` // 过滤条件
+}
