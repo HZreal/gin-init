@@ -6,8 +6,13 @@ import (
 	"gin-init/config"
 	pb "gin-init/core/rpc/proto"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
+	"google.golang.org/grpc/status"
 	"io"
+	"log"
 	"net"
+	"strconv"
 )
 
 type RPCServer struct {
@@ -18,7 +23,24 @@ type RPCServer struct {
 }
 
 func (s *RPCServer) Add(ctx context.Context, req *pb.AddRequest) (*pb.AddResponse, error) {
+	// 获取公共参数
+	md, _ := metadata.FromIncomingContext(ctx)
+	tokenVals := md.Get("token")
+	if tokenVals == nil {
+		return nil, status.Error(codes.InvalidArgument, "token is empty")
+	}
+	token := tokenVals[0]
+	log.Printf("token: %s\n", token)
+
+	appIdVals := md.Get("app_id")
+	if appIdVals == nil {
+		return nil, status.Error(codes.InvalidArgument, "app_id is empty")
+	}
+	appId, _ := strconv.Atoi(appIdVals[0])
+	log.Printf("app_id: %d\n", appId)
+
 	fmt.Printf("receviced ----> %v", req)
+
 	return &pb.AddResponse{Result: req.A + req.B}, nil
 }
 

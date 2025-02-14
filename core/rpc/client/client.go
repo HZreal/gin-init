@@ -4,6 +4,7 @@ import (
 	"context"
 	pb "gin-init/core/rpc/proto"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/metadata"
 	"io"
 	"log"
 	"time"
@@ -23,8 +24,18 @@ func invoke(x, y int32) (sum, subtract int32) {
 	//
 	client := pb.NewCalculatorClient(conn)
 
+	// 传递元数据，作为公共参数
+	md := metadata.New(map[string]string{
+		"token":  "user_token_123",
+		"app_id": "1001",
+	})
+	ctx = metadata.NewOutgoingContext(ctx, md)
+
 	// 测试 Add 方法
 	r, err := client.Add(ctx, &pb.AddRequest{A: x, B: y})
+	//
+	// responseMd := metadata.Pairs()
+	// r, err := client.Add(ctx, &pb.AddRequest{A: x, B: y}, grpc.Header(&responseMd))
 	if err != nil {
 		log.Fatalf("could not add: %v", err)
 	}
