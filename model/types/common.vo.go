@@ -7,3 +7,11 @@ type PaginationResult struct {
 	PageSize    int         `json:"pageSize"`
 	Records     interface{} `json:"records"`
 }
+
+// PageResult 分页结果
+type PageResult[T any] struct {
+	Total    int64 `json:"total"`    // 总数
+	Page     int   `json:"page"`     // 当前页码
+	PageSize int   `json:"pageSize"` // 每页数量
+	Items    []T   `json:"items"`    // 数据列表
+}

@@ -10,6 +10,7 @@ type QueryPagination struct {
 	SortOrder string `form:"sortOrder"`
 }
 
+// PageInfo 分页请求参数
 type PaginationType struct {
 	Page     int `json:"page,default=1"`
 	PageSize int `json:"pageSize,default=10"`
