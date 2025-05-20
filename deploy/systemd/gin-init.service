@@ -1,0 +1,14 @@
+[Unit]
+Description=Gin Init Service
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/gin-init
+ExecStart=/opt/gin-init/gin-init
+Restart=on-failure
+RestartSec=5s
+Environment=GIN_MODE=release
+
+[Install]
+WantedBy=multi-user.target 
