@@ -23,10 +23,10 @@ func InitializeApp() (*AppControllers, error) {
 	demoController := controller.NewDemoController(demoService)
 	userModel := entity.NewUserModel()
 	redisService := common.NewRedisService()
-	userService := service.NewUserService(userModel, redisService)
+	userService := service.NewDemoUserService(userModel, redisService)
 	sysService := service.NewSysService(userService)
 	sysController := controller.NewSysController(sysService)
-	userController := controller.NewUserController(userService)
+	userController := controller.NewDemoUserController(userService)
 	appControllers := &AppControllers{
 		DemoController: demoController,
 		SysController:  sysController,
@@ -41,7 +41,7 @@ var DemoSet = wire.NewSet(controller.NewDemoController, service.NewDemoService, 
 
 var SysSet = wire.NewSet(controller.NewSysController, service.NewSysService)
 
-var UserSet = wire.NewSet(controller.NewUserController, service.NewUserService, common.NewRedisService, entity.NewUserModel)
+var UserSet = wire.NewSet(controller.NewDemoUserController, service.NewDemoUserService, common.NewRedisService, entity.NewUserModel)
 
 // AppSet 包含了所有模型的 ProviderSet
 var AppSet = wire.NewSet(
@@ -53,5 +53,5 @@ var AppSet = wire.NewSet(
 type AppControllers struct {
 	DemoController *controller.DemoController
 	SysController  *controller.SysController
-	UserController *controller.UserController
+	UserController *controller.DemoUserController
 }

@@ -8,6 +8,7 @@ import (
 	"gin-init/model/entity"
 	"gin-init/service"
 	"gin-init/service/common"
+
 	"github.com/google/wire"
 )
 
@@ -25,8 +26,8 @@ var SysSet = wire.NewSet(
 )
 
 var UserSet = wire.NewSet(
-	controller.NewUserController,
-	service.NewUserService,
+	controller.NewDemoUserController,
+	service.NewDemoUserService,
 	common.NewRedisService,
 	entity.NewUserModel,
 )
@@ -42,7 +43,7 @@ var AppSet = wire.NewSet(
 type AppControllers struct {
 	DemoController *controller.DemoController
 	SysController  *controller.SysController
-	UserController *controller.UserController
+	UserController *controller.DemoUserController
 }
 
 // InitializeApp 初始化整个应用的控制器

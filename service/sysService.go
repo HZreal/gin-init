@@ -8,10 +8,10 @@ import (
 )
 
 type SysService struct {
-	UserService *UserService
+	UserService *DemoUserService
 }
 
-func NewSysService(userService *UserService) *SysService {
+func NewSysService(userService *DemoUserService) *SysService {
 	return &SysService{UserService: userService}
 }
 

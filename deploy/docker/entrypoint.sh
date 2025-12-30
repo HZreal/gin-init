@@ -2,4 +2,4 @@
 set -e
 
 echo "Starting gin-init..."
-exec ./gin-init 
+exec ./gin-init

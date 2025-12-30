@@ -17,23 +17,23 @@ func setupRouter() *gin.Engine {
 	r := gin.Default()
 	// 注册用户相关接口
 	r.POST("/api/user/create", func(c *gin.Context) {
-		uc := NewUserController2()
+		uc := NewUserController()
 		uc.Create(c)
 	})
 	r.POST("/api/user/list", func(c *gin.Context) {
-		uc := NewUserController(&service.UserService{})
+		uc := NewDemoUserController(&service.DemoUserService{})
 		uc.GetAllUser(c)
 	})
 	r.GET("/api/user/detail", func(c *gin.Context) {
-		uc := NewUserController(&service.UserService{})
+		uc := NewDemoUserController(&service.DemoUserService{})
 		uc.GetUserDetail(c)
 	})
 	r.POST("/api/user/update", func(c *gin.Context) {
-		uc := NewUserController(&service.UserService{})
+		uc := NewDemoUserController(&service.DemoUserService{})
 		uc.UpdateUser(c)
 	})
 	r.POST("/api/user/delete", func(c *gin.Context) {
-		uc := NewUserController(&service.UserService{})
+		uc := NewDemoUserController(&service.DemoUserService{})
 		uc.DeleteUser(c)
 	})
 	return r
